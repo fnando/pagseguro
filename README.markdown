@@ -85,6 +85,38 @@ Por padrão, o formulário é enviado como UTF-8; você pode mudar a codificaç�
 
 	<%= pagseguro_form @order, :submit => "Efetuar pagamento!", :encoding => "ISO-8859-1" %>
 
+### Recebendo notificações
+
+Toda vez que o status de pagamento for alterado, o [PagSeguro](https://pagseguro.uol.com.br/?ind=689659) irá notificar sua URL de retorno com diversos dados. Você pode interceptar estas notificações com o método `pagseguro_notification`. O bloco receberá um objeto da class `PagSeguro::Notification` e só será executado se for uma notificação verificada junto ao [PagSeguro](https://pagseguro.uol.com.br/?ind=689659).
+
+	class CartController < ApplicationController
+	  skip_before_filter :verify_authenticity_token
+	
+	  def confirm
+	    return unless request.post?
+		
+		pagseguro_notification do |notification|
+		  # Aqui você deve verificar se o pedido possui os mesmos produtos
+		  # que você cadastrou. O produto só deve ser liberado caso o status
+		  # do pedido seja "completed" ou "approved"
+		end
+		
+		render :nothing => true
+	  end
+	end
+
+O objeto `notification` possui os seguintes métodos:
+
+* `PagSeguro::Notification#products`: Lista de produtos enviados na notificação.
+* `PagSeguro::Notification#shipping`: Valor do frete
+* `PagSeguro::Notification#status`: Status do pedido
+* `PagSeguro::Notification#payment_method`: Tipo de pagamento
+* `PagSeguro::Notification#processed_at`: Data e hora da transação
+* `PagSeguro::Notification#buyer`: Dados do comprador
+* `PagSeguro::Notification#valid?(force=false)`: Verifica se a notificação é válido, confirmando-a junto ao PagSeguro. A resposta é jogada em cache e pode ser forçada com `PagSeguro::Notification#valid?(:force)`
+
+**ATENÇÃO:** Não se esqueça de adicionar `skip_before_filter :verify_authenticity_token` ao controller que receberá a notificação; caso contrário, uma exceção será lançada.
+
 ### Utilizando modo de desenvolvimento
 
 Toda vez que você enviar o formulário no modo de desenvolvimento, um arquivo YAML será criado em `tmp/pagseguro-#{RAILS_ENV}.yml`. Esse arquivo conterá todos os pedidos enviados.

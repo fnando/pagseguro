@@ -2,7 +2,7 @@ class CartController < ApplicationController
   skip_before_filter :verify_authenticity_token
   
   def success
-    pagseguro_status do |n|
+    pagseguro_notification do |n|
       Rails.logger.debug "==> #{n.inspect}"
     end
   end

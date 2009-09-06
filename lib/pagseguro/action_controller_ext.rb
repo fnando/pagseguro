@@ -1,7 +1,7 @@
 module PagSeguro
   module ActionController
     private
-      def pagseguro_status(&block)
+      def pagseguro_notification(&block)
         return unless request.post?
         
         _notification = PagSeguro::Notification.new(params)
