@@ -10,3 +10,4 @@ test:
 production:
   authenticity_token: 9CA8D46AF0C6177CB4C23D76CAF5E4B0
   email: user@example.com
+  return_to: "/cart/success"

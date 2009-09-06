@@ -6,4 +6,12 @@ namespace :pagseguro do
     require File.dirname(__FILE__) + "/../lib/pagseguro/rake"
     PagSeguro::Rake.run
   end
+  
+  desc "Copy configuration file"
+  task :setup do
+    require "FileUtils" unless defined?(FileUtils)
+    FileUtils.cp File.dirname(__FILE__) + "/../templates/pagseguro.yml", "config/pagseguro.yml"
+    
+    puts "=> [PagSeguro] Please edit 'config/pagseguro.yml'"
+  end
 end
