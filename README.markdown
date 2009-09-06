@@ -75,6 +75,7 @@ Se você precisar, pode definir o tipo de frete com o método `shipping_type`.
 
 	@order.shipping_type = "SD" # Sedex
 	@order.shipping_type = "EN" # PAC
+	@order.shipping_type = "FR" # Frete Próprio
 	
 Depois que você definiu os produtos do pedido, você pode exibir o formulário.
 
