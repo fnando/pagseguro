@@ -8,8 +8,8 @@ class PagseguroDeveloperController < ApplicationController
     # create the orders file if doesn't exist
     FileUtils.touch(PAGSEGURO_ORDERS_FILE) unless File.exist?(PAGSEGURO_ORDERS_FILE)
     
-    # if file is empty, false is returned;
-    # default to a empty hash is this case
+    # YAML caveat: if file is empty false is returned;
+    # we need to set default to an empty hash in this case
     orders = YAML.load_file(PAGSEGURO_ORDERS_FILE) || {}
     
     # add a new order, associating it to the order id

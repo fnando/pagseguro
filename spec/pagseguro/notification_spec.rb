@@ -292,7 +292,7 @@ describe PagSeguro::Notification do
       }.merge(options)
       
       @__products << {
-        "ProdId_#{i}" => options[:id].to_s,
+        "ProdID_#{i}" => options[:id].to_s,
         "ProdDescricao_#{i}" => options[:description].to_s,
         "ProdValor_#{i}" => options[:price].to_s,
         "ProdFrete_#{i}" => options[:shipping].to_s,

@@ -40,8 +40,8 @@ module PagSeguro
       @params = params
     end
     
-    # Return a local URL if developer mode is enabled.
-    # This URL will always respond "VERIFICADO"
+    # Return a local URL if developer mode is enabled; this URL 
+    # will always respond "VERIFICADO" in this case
     def api_url
       if PagSeguro.developer?
         File.join PagSeguro.config["base"], "pagseguro_developer/confirm"
@@ -59,7 +59,7 @@ module PagSeguro
 
         for i in (1..params["NumItens"].to_i)
           items << {
-            :id => params["ProdId_#{i}"],
+            :id => params["ProdID_#{i}"],
             :description => params["ProdDescricao_#{i}"],
             :quantity => params["ProdQuantidade_#{i}"].to_i,
             :price => to_price(params["ProdValor_#{i}"]),
