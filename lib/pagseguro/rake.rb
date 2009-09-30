@@ -4,6 +4,7 @@ module PagSeguro
 
     def run
       require "digest/md5"
+      require "faker"
 
       # Not running in developer mode? Exit!
       unless PagSeguro.developer?
@@ -35,6 +36,41 @@ module PagSeguro
         puts "=> [PagSeguro] The order #{ENV['ID'].inspect} could not be found. Exiting now!"
         exit
       end
+
+      # Set the client's info
+      order["CliNome"] = Faker::Name.name
+      order["CliEmail"] = Faker::Internet.email
+      order["CliEndereco"] = Faker::Address.street_name
+      order["CliNumero"] = rand(1000)
+      order["CliComplemento"] = Faker::Address.secondary_address
+      order["CliBairro"] = Faker::Address.city
+      order["CliCidade"] = Faker::Address.city
+      order["CliCEP"] = "12345678"
+      order["CliTelefone"] = "11 12345678"
+      
+      # Set the transaction date
+      order["DataTransacao"] = Time.now.strftime("%d/%m/%Y %H:%M:%S")
+      
+      # Replace the order id to the correct name
+      order["Referencia"] = order.delete("ref_transacao")
+      
+      # Count the number of products in this order
+      order["NumItens"] = order.inject(0) do |count, (key, value)|
+        count += 1 if key =~ /item_id_/
+        count
+      end
+      
+      # Replace all products      
+      to_price = lambda {|s| s.gsub(/^(.*?)(.{2})$/, '\1,\2') }
+      
+      for index in (1..order["NumItens"])
+        order["ProdID_#{index}"] = order.delete("item_id_#{index}")
+        order["ProdDescricao_#{index}"] = order.delete("item_descr_#{index}")
+        order["ProdValor_#{index}"] = to_price.call(order.delete("item_valor_#{index}"))
+        order["ProdQuantidade_#{index}"] = order.delete("item_quant_#{index}")
+        order["ProdFrete_#{index}"] = order["item_frete_#{index}"] == "0" ? "0,00" : to_price.call(order.delete("item_frete_#{index}"))
+        order["ProdExtras_#{index}"] = "0,00"
+      end
       
       # Retrieve the specified status or default to :completed
       status = (ENV["STATUS"] || :completed).to_sym
@@ -45,15 +81,12 @@ module PagSeguro
       # Set a random transaction id
       order["TransacaoID"] = Digest::MD5.hexdigest(Time.now.to_s)
       
+      # Set note
+      order["Anotacao"] = ENV["NOTE"].to_s
+      
       # Set payment method and status
       order["TipoPagamento"] = PagSeguro::Notification::PAYMENT_METHOD.index(payment_method)
       order["StatusTransacao"] = PagSeguro::Notification::STATUS.index(status)
-      
-      # Count the number of products in this order
-      order["NumItens"] = order.inject(0) do |count, (key, value)|
-        count += 1 if key =~ /item_id_/
-        count
-      end
       
       # Finally, ping the configured return URL
       uri = URI.parse File.join(PagSeguro.config["base"], PagSeguro.config["return_to"])

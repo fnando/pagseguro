@@ -28,5 +28,5 @@ config.action_mailer.delivery_method = :test
 # config.active_record.schema_format = :sql
 
 config.gem "fakeweb"
-config.gem "dchelimsky-rspec", :lib => false, :source => "http://gems.github.com"
-config.gem "dchelimsky-rspec-rails", :lib => false, :source => "http://gems.github.com"
+config.gem "rspec", :lib => false
+config.gem "rspec-rails", :lib => false
