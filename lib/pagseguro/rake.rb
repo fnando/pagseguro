@@ -38,7 +38,7 @@ module PagSeguro
       end
 
       # Set the client's info
-      order["CliNome"] = Faker::Name.name
+      order["CliNome"] = ENV["NAME"] || Faker::Name.name
       order["CliEmail"] = Faker::Internet.email
       order["CliEndereco"] = Faker::Address.street_name
       order["CliNumero"] = rand(1000)

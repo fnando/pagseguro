@@ -65,6 +65,14 @@ describe PagSeguro::Rake do
     data["Anotacao"].should == "Deliver ASAP"
   end
   
+  it "should set client's name" do
+    ENV["NAME"] = "Rafael Mendonça França"
+    
+    PagSeguro::Rake.run
+    
+    data["CliNome"].should == "Rafael Mendonça França"
+  end
+  
   it "should set transaction date" do
     now = Time.now
     Time.stub!(:now).and_return(now)
