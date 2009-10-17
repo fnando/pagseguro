@@ -37,7 +37,20 @@ module PagSeguro
     
     # Expects the params object from the current request
     def initialize(params)
-      @params = params
+      @params = normalize(params)
+    end
+    
+    # Normalize the specified hash converting all data to UTF-8
+    def normalize(hash)
+      hash.each do |key, value|
+        if value.kind_of?(Hash)
+          hash[key] = normalize(value)
+        else
+          hash[key] = value.to_s.unpack('C*').pack('U*')
+        end
+      end
+      
+      hash
     end
     
     # Return a local URL if developer mode is enabled; this URL 
