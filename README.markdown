@@ -132,9 +132,9 @@ Depois, você será redirecionado para a URL de retorna que você configurou no 
 	
 O ID do pedido deve ser o mesmo que foi informado quando você instanciou a class `PagSeguro::Order`. Por padrão, o status do pedido será `completed` e o tipo de pagamento `credit_card`. Você pode especificar esses parâmetros como os exemplos abaixo.
 
-	$ rake pagamento:notify ID=1 PAYMENT_TYPE=invoice STATUS=canceled NOTE="Enviar por motoboy" NAME="José da Silva"
+	$ rake pagamento:notify ID=1 PAYMENT_METHOD=invoice STATUS=canceled NOTE="Enviar por motoboy" NAME="José da Silva"
 
-#### PAYMENT_TYPE
+#### PAYMENT_METHOD
 
 * `credit_card`: Cartão de crédito
 * `invoice`: Boleto
