@@ -1,7 +1,7 @@
 module PagSeguro
   class Notification
-    API_URL = "https://pagseguro.uol.com.br/Security/NPI/Default.aspx/"
-    
+    API_URL = "https://pagseguro.uol.com.br/Security/NPI/Default.aspx"
+
     # Map all the attributes from PagSeguro
     MAPPING = {
       :payment_method => "TipoPagamento",
@@ -13,7 +13,7 @@ module PagSeguro
       :shipping       => "ValorFrete",
       :notes          => "Anotacao"
     }
-    
+
     # Map order status from PagSeguro
     STATUS = {
       "Completo"          => :completed,
@@ -23,7 +23,7 @@ module PagSeguro
       "Cancelado"         => :canceled,
       "Devolvido"         => :refunded
     }
-    
+
     # Map payment method from PagSeguro
     PAYMENT_METHOD = {
       "Cartão de Crédito" => :credit_card,
@@ -31,15 +31,15 @@ module PagSeguro
       "Pagamento"         => :pagseguro,
       "Pagamento online"  => :online_transfer
     }
-    
+
     # The Rails params hash
     attr_accessor :params
-    
+
     # Expects the params object from the current request
     def initialize(params)
       @params = normalize(params)
     end
-    
+
     # Normalize the specified hash converting all data to UTF-8
     def normalize(hash)
       hash.each do |key, value|
@@ -49,11 +49,11 @@ module PagSeguro
           hash[key] = value.to_s.unpack('C*').pack('U*')
         end
       end
-      
+
       hash
     end
-    
-    # Return a local URL if developer mode is enabled; this URL 
+
+    # Return a local URL if developer mode is enabled; this URL
     # will always respond "VERIFICADO" in this case
     def api_url
       if PagSeguro.developer?
@@ -62,7 +62,7 @@ module PagSeguro
         API_URL
       end
     end
-    
+
     # Return a list of products sent by PagSeguro.
     # The values will be normalized
     # (e.g. currencies will be converted to cents, quantity will be an integer)
@@ -80,29 +80,29 @@ module PagSeguro
             :fees => to_price(params["ProdExtras_#{i}"])
           }
         end
-        
+
         items
       end
     end
-    
+
     # Return the shipping fee
     # Will be converted to a float number
     def shipping
       to_price mapping_for(:shipping)
     end
-    
+
     # Return the order status
     # Will be mapped to the STATUS constant
     def status
       @status ||= STATUS[mapping_for(:status)]
     end
-    
+
     # Return the payment method
     # Will be mapped to the PAYMENT_METHOD constant
     def payment_method
       @payment_method ||= PAYMENT_METHOD[mapping_for(:payment_method)]
     end
-    
+
     # Parse the processing date to a Ruby object
     def processed_at
       @processed_at ||= begin
@@ -110,7 +110,7 @@ module PagSeguro
         Time.parse("#{groups[3]}-#{groups[2]}-#{groups[1]} #{groups[4]}")
       end
     end
-    
+
     # Return the buyer info
     def buyer
       @buyer ||= {
@@ -131,18 +131,18 @@ module PagSeguro
         }
       }
     end
-    
+
     def method_missing(method, *args)
       return mapping_for(method) if MAPPING[method]
       super
     end
-    
+
     # A wrapper to the params hash,
     # sanitizing the return to symbols
     def mapping_for(name)
       params[MAPPING[name]]
     end
-    
+
     # Cache the validation.
     # To bypass the cache, just provide an argument that is evaluated as true.
     #
@@ -153,13 +153,13 @@ module PagSeguro
       @valid = validates? if @valid.nil?
       @valid
     end
-    
+
     private
       # Convert amount format to float
       def to_price(amount)
         amount.to_s.gsub(/[^\d]/, "").gsub(/^(\d+)(\d{2})$/, '\1.\2').to_f
       end
-      
+
       # Check if the provided data is valid by requesting the
       # confirmation API url.
       def validates?
@@ -168,9 +168,9 @@ module PagSeguro
           :Comando => "validar",
           :Token => PagSeguro.config["authenticity_token"]
         }).dup
-        
+
         return true if PagSeguro.developer?
-        
+
         # do the request
         uri = URI.parse(API_URL)
         http = Net::HTTP.new(uri.host, uri.port)
