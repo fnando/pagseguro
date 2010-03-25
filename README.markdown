@@ -86,7 +86,9 @@ Depois que você definiu os produtos do pedido, você pode exibir o formulário.
 	<!-- app/views/cart/checkout.html.erb -->
 	<%= pagseguro_form @order, :submit => "Efetuar pagamento!" %>
 
-	<%= pagseguro_form @order, :submit => "Efetuar pagamento!", :encoding => "ISO-8859-1" %>
+Por padrão, o formulário é enviado para o email no arquivo de configuração. Você pode mudar o email com a opção `:email`.
+
+	<%= pagseguro_form @order, :submit => "Efetuar pagamento!", :email => @account.email %>
 
 ### Recebendo notificações
 
@@ -102,6 +104,23 @@ Toda vez que o status de pagamento for alterado, o [PagSeguro](https://pagseguro
 		  # Aqui você deve verificar se o pedido possui os mesmos produtos
 		  # que você cadastrou. O produto só deve ser liberado caso o status
 		  # do pedido seja "completed" ou "approved"
+		end
+
+		render :nothing => true
+	  end
+	end
+
+O método pagseguro_notification também pode receber como parâmetro o authenticity_token que será usado pra verificar a autenticação.
+
+	class CartController < ApplicationController
+	  skip_before_filter :verify_authenticity_token
+
+	  def confirm
+	    return unless request.post?
+		# Se você receber pagamentos de contas diferentes, pode passar o
+		# authenticity_token adequado como parâmetro para pagseguro_notification
+		account = Account.find(params[:seller_id])
+		pagseguro_notification(account.authenticity_token) do |notification|
 		end
 
 		render :nothing => true
