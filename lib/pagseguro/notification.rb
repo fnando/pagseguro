@@ -36,7 +36,8 @@ module PagSeguro
     attr_accessor :params
 
     # Expects the params object from the current request
-    def initialize(params)
+    def initialize(params, token = nil)
+      @token = token
       @params = normalize(params)
     end
 
@@ -179,7 +180,7 @@ module PagSeguro
         # include the params to validate our request
         request_params = denormalize params.merge({
           :Comando => "validar",
-          :Token => PagSeguro.config["authenticity_token"]
+          :Token => @token || PagSeguro.config["authenticity_token"]
         }).dup
 
         return true if PagSeguro.developer?
