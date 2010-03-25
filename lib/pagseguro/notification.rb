@@ -42,15 +42,16 @@ module PagSeguro
 
     # Normalize the specified hash converting all data to UTF-8
     def normalize(hash)
-      hash.each do |key, value|
-        if value.kind_of?(Hash)
-          hash[key] = normalize(value)
-        else
-          hash[key] = value.to_s.unpack('C*').pack('U*')
-        end
+      each_value(hash) do |value|
+        value.to_s.unpack('C*').pack('U*')
       end
+    end
 
-      hash
+    # Denormalize the specified hash converting all data to ISO-8859-1
+    def denormalize(hash)
+      each_value(hash) do |value|
+        value.to_s.unpack('U*').pack('C*')
+      end
     end
 
     # Return a local URL if developer mode is enabled; this URL
@@ -155,6 +156,18 @@ module PagSeguro
     end
 
     private
+      def each_value(hash, &blk)
+        hash.each do |key, value|
+          if value.kind_of?(Hash)
+            hash[key] = each_value(value, &blk)
+          else
+            hash[key] = blk.call value
+          end
+        end
+
+        hash
+      end
+
       # Convert amount format to float
       def to_price(amount)
         amount.to_s.gsub(/[^\d]/, "").gsub(/^(\d+)(\d{2})$/, '\1.\2').to_f
@@ -164,7 +177,7 @@ module PagSeguro
       # confirmation API url.
       def validates?
         # include the params to validate our request
-        request_params = params.merge({
+        request_params = denormalize params.merge({
           :Comando => "validar",
           :Token => PagSeguro.config["authenticity_token"]
         }).dup
