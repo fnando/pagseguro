@@ -1,11 +1,10 @@
-<% form_tag PagSeguro.gateway_url, :class => "pagseguro" do %>
+<% form_tag PagSeguro.gateway_url, :class => "pagseguro", "accept-charset" => "ISO-8859-1" do %>
 	<div>
 		<%= hidden_field_tag "email_cobranca", options[:email] || PagSeguro.config["email"] %>
 		<%= hidden_field_tag "tipo", "CP" %>
 		<%= hidden_field_tag "moeda", "BRL" %>
 		<%= hidden_field_tag "ref_transacao", order.id %>
 		<%= hidden_field_tag "tipo_frete", order.shipping_type if order.shipping_type %>
-		<%= hidden_field_tag "encoding", options[:encoding] %>
 		
 		<% order.products.each_with_index do |product, i| %>
 			<% i += 1 %>

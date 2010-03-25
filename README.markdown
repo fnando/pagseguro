@@ -86,8 +86,6 @@ Depois que você definiu os produtos do pedido, você pode exibir o formulário.
 	<!-- app/views/cart/checkout.html.erb -->
 	<%= pagseguro_form @order, :submit => "Efetuar pagamento!" %>
 
-Por padrão, o formulário é enviado como UTF-8; você pode mudar a codificação com a opção `:encoding`.
-
 	<%= pagseguro_form @order, :submit => "Efetuar pagamento!", :encoding => "ISO-8859-1" %>
 
 ### Recebendo notificações

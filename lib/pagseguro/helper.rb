@@ -3,7 +3,6 @@ module PagseguroHelper
   
   def pagseguro_form(order, options={})
     options = {
-      :encoding => "utf-8",
       :submit => "Pagar com PagSeguro"
     }.merge(options)
 
