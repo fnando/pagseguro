@@ -110,7 +110,7 @@ Toda vez que o status de pagamento for alterado, o [PagSeguro](https://pagseguro
 	  end
 	end
 
-O método pagseguro_notification também pode receber como parâmetro o authenticity_token que será usado pra verificar a autenticação.
+O método `pagseguro_notification` também pode receber como parâmetro o `authenticity_token` que será usado pra verificar a autenticação.
 
 	class CartController < ApplicationController
 	  skip_before_filter :verify_authenticity_token
@@ -173,6 +173,12 @@ AUTOR:
 Nando Vieira (<http://simplesideias.com.br>)
 
 Recomendar no [Working With Rails](http://www.workingwithrails.com/person/7846-nando-vieira)
+
+COLABORADORES:
+--------------
+
+* Elomar (<http://github.com/elomar>)
+* Rafael (<http://github.com/rafaels>)
 
 LICENÇA:
 --------
