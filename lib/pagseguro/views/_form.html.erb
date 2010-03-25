@@ -1,6 +1,6 @@
 <% form_tag PagSeguro.gateway_url, :class => "pagseguro" do %>
 	<div>
-		<%= hidden_field_tag "email_cobranca", PagSeguro.config["email"] %>
+		<%= hidden_field_tag "email_cobranca", options[:email] || PagSeguro.config["email"] %>
 		<%= hidden_field_tag "tipo", "CP" %>
 		<%= hidden_field_tag "moeda", "BRL" %>
 		<%= hidden_field_tag "ref_transacao", order.id %>
