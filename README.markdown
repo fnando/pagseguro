@@ -16,22 +16,29 @@ Após o processo de compra e pagamento, o usuário é enviado de volta a seu sit
 
 Antes de enviar o usuário para essa URL, o robô do PagSeguro faz um POST para ela, em segundo plano, com os dados e status da transação. Lendo esse POST, você pode obter o status do pedido. Se o pagamento entrou em análise, ou se o usuário pagou usando boleto bancário, o status será "Aguardando Pagamento" ou "Em Análise". Nesses casos, quando a transação for confirmada (o que pode acontecer alguns dias depois) a loja receberá outro POST, informando o novo status. **Cada vez que a transação muda de status, um POST é enviado.**
 
+REQUISITOS
+----------
+
+A versão atual que está sendo mantida suporta Rails 3.0.0 ou superior.
+
+Se você quiser esta biblioteca em versão mais antigas do Rails (2.3, por exemplo) deverá usar o [branch legacy](http://github.com/fnando/pagseguro/tree/legacy). Note que esta versão não será mais atualizada com novas funcionalidades; apenas correções de bugs serão aplicadas.
+
 COMO USAR
 ---------
 
 ### Configuração
 
-O primeiro passo é instalar o plugin. Para isso, basta executar o comando abaixo na raíz de seu projeto.
+O primeiro passo é instalar a biblioteca. Para isso, basta executar o comando
 
-	script/plugin install git://github.com/fnando/pagseguro.git
+	gem install pagseguro
 
 Se for utilizar o modo de desenvolvimento também precisará da gem Faker:
 
-	sudo gem install faker
+	gem install faker
 
-Depois de instalar o plugin, você precisará executar a rake abaixo; ela irá gerar o arquivo `config/pagseguro.yml`.
+Depois de instalar a biblioteca, você precisará executar gerar o arquivo de configuração, que deve residir em `config/pagseguro.yml`. Para gerar um arquivo de modelo execute
 
-	rake pagseguro:setup
+	rails generate pagseguro:install
 
 O arquivo de configuração gerado será parecido com isto:
 
@@ -92,7 +99,7 @@ Por padrão, o formulário é enviado para o email no arquivo de configuração.
 
 ### Recebendo notificações
 
-Toda vez que o status de pagamento for alterado, o [PagSeguro](https://pagseguro.uol.com.br/?ind=689659) irá notificar sua URL de retorno com diversos dados. Você pode interceptar estas notificações com o método `pagseguro_notification`. O bloco receberá um objeto da class `PagSeguro::Notification` e só será executado se for uma notificação verificada junto ao [PagSeguro](https://pagseguro.uol.com.br/?ind=689659).
+Toda vez que o status de pagamento for alterado, o [PagSeguro](https://pagseguro.uol.com.br/?ind=689659) irá notificar sua URL de retorno com diversos dados. Você pode interceptar estas notificações com o método `pagseguro_notification`. O bloco receberá um objeto da classe `PagSeguro::Notification` e só será executado se for uma notificação verificada junto ao [PagSeguro](https://pagseguro.uol.com.br/?ind=689659).
 
 	class CartController < ApplicationController
 	  skip_before_filter :verify_authenticity_token
@@ -141,7 +148,7 @@ O objeto `notification` possui os seguintes métodos:
 
 ### Utilizando modo de desenvolvimento
 
-Toda vez que você enviar o formulário no modo de desenvolvimento, um arquivo YAML será criado em `tmp/pagseguro-#{RAILS_ENV}.yml`. Esse arquivo conterá todos os pedidos enviados.
+Toda vez que você enviar o formulário no modo de desenvolvimento, um arquivo YAML será criado em `tmp/pagseguro-#{Rails.env}.yml`. Esse arquivo conterá todos os pedidos enviados.
 
 Depois, você será redirecionado para a URL de retorno que você configurou no arquivo `config/pagseguro.yml`. Para simular o envio de notificações, você deve utilizar a rake `pagseguro:notify`.
 
@@ -149,7 +156,7 @@ Depois, você será redirecionado para a URL de retorno que você configurou no 
 
 O ID do pedido deve ser o mesmo que foi informado quando você instanciou a class `PagSeguro::Order`. Por padrão, o status do pedido será `completed` e o tipo de pagamento `credit_card`. Você pode especificar esses parâmetros como o exemplo abaixo.
 
-	$ rake pagamento:notify ID=1 PAYMENT_METHOD=invoice STATUS=canceled NOTE="Enviar por motoboy" NAME="José da Silva"
+	$ rake pagamento:notify ID=1 PAYMENT_METHOD=invoice STATUS=canceled NOTE="Enviar por motoboy" NAME="José da Silva" EMAIL="jose@dasilva.com"
 
 #### PAYMENT_METHOD
 

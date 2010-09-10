@@ -1,21 +1,21 @@
-<% form_tag PagSeguro.gateway_url, :class => "pagseguro", "accept-charset" => "ISO-8859-1" do %>
+<form accept-charset="ISO-8859-1" action="<%= PagSeguro.gateway_url %>" id="pagseguro" class="pagseguro" method="post">
 	<div>
 		<%= hidden_field_tag "email_cobranca", options[:email] || PagSeguro.config["email"] %>
 		<%= hidden_field_tag "tipo", "CP" %>
 		<%= hidden_field_tag "moeda", "BRL" %>
 		<%= hidden_field_tag "ref_transacao", order.id %>
 		<%= hidden_field_tag "tipo_frete", order.shipping_type if order.shipping_type %>
-		
+
 		<% order.products.each_with_index do |product, i| %>
 			<% i += 1 %>
 			<%= hidden_field_tag "item_quant_#{i}", product[:quantity] %>
 			<%= hidden_field_tag "item_id_#{i}", product[:id] %>
 			<%= hidden_field_tag "item_descr_#{i}", product[:description] %>
 			<%= hidden_field_tag "item_valor_#{i}", product[:price] %>
-			<%= hidden_field_tag "item_peso_#{i}", product[:weight].to_i %>
-			<%= hidden_field_tag "item_frete_#{i}", product[:shipping].to_i %>
-			
+			<%= hidden_field_tag "item_peso_#{i}", product[:weight].to_i if product[:weight] %>
+			<%= hidden_field_tag "item_frete_#{i}", product[:shipping].to_i if product[:shipping] %>
 		<% end %>
+
 		<%= submit_tag options[:submit] %>
 	</div>
-<% end %>
+</form>

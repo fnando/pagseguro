@@ -1,7 +1,7 @@
-require File.dirname(__FILE__) + "/../spec_helper"
+require "spec_helper"
 
 describe PagSeguro::Order do
-  before(:each) do
+  before do
     @order = PagSeguro::Order.new
     @product = {:price => 9.90, :description => "Ruby 1.9 PDF", :id => 1}
   end

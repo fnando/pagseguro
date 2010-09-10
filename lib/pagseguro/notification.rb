@@ -1,3 +1,4 @@
+# encoding: utf-8
 module PagSeguro
   class Notification
     API_URL = "https://pagseguro.uol.com.br/Security/NPI/Default.aspx"
@@ -52,16 +53,6 @@ module PagSeguro
     def denormalize(hash)
       each_value(hash) do |value|
         value.to_s.unpack('U*').pack('C*')
-      end
-    end
-
-    # Return a local URL if developer mode is enabled; this URL
-    # will always respond "VERIFICADO" in this case
-    def api_url
-      if PagSeguro.developer?
-        File.join PagSeguro.config["base"], "pagseguro_developer/confirm"
-      else
-        API_URL
       end
     end
 
@@ -157,44 +148,45 @@ module PagSeguro
     end
 
     private
-      def each_value(hash, &blk)
-        hash.each do |key, value|
-          if value.kind_of?(Hash)
-            hash[key] = each_value(value, &blk)
-          else
-            hash[key] = blk.call value
-          end
+    def each_value(hash, &blk)
+      hash.each do |key, value|
+        if value.kind_of?(Hash)
+          hash[key] = each_value(value, &blk)
+        else
+          hash[key] = blk.call value
         end
-
-        hash
       end
 
-      # Convert amount format to float
-      def to_price(amount)
-        amount.to_s.gsub(/[^\d]/, "").gsub(/^(\d+)(\d{2})$/, '\1.\2').to_f
-      end
+      hash
+    end
 
-      # Check if the provided data is valid by requesting the
-      # confirmation API url.
-      def validates?
-        # include the params to validate our request
-        request_params = denormalize params.merge({
-          :Comando => "validar",
-          :Token => @token || PagSeguro.config["authenticity_token"]
-        }).dup
+    # Convert amount format to float
+    def to_price(amount)
+      amount.to_s.gsub(/[^\d]/, "").gsub(/^(\d+)(\d{2})$/, '\1.\2').to_f
+    end
 
-        return true if PagSeguro.developer?
+    # Check if the provided data is valid by requesting the
+    # confirmation API url. The request will always be valid while running in
+    # developer mode.
+    def validates?
+      return true if PagSeguro.developer?
 
-        # do the request
-        uri = URI.parse(API_URL)
-        http = Net::HTTP.new(uri.host, uri.port)
-        http.use_ssl = true
-        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      # include the params to validate our request
+      request_params = denormalize params.merge({
+        :Comando => "validar",
+        :Token => @token || PagSeguro.config["authenticity_token"]
+      }).dup
 
-        request = Net::HTTP::Post.new(uri.path)
-        request.set_form_data request_params
-        response = http.start {|r| r.request request }
-        (response.body =~ /VERIFICADO/) != nil
-      end
+      # do the request
+      uri = URI.parse(API_URL)
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+      request = Net::HTTP::Post.new(uri.path)
+      request.set_form_data request_params
+      response = http.start {|r| r.request request }
+      (response.body =~ /VERIFICADO/) != nil
+    end
   end
 end
