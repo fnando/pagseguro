@@ -36,6 +36,7 @@ Gem::Specification.new do |s|
      "lib/tasks/pagseguro.rake",
      "pagseguro.gemspec",
      "spec/controllers/developer_controller_spec.rb",
+     "spec/helpers/helper_spec.rb",
      "spec/pagseguro/notification_spec.rb",
      "spec/pagseguro/order_spec.rb",
      "spec/pagseguro/pagseguro_spec.rb",
@@ -52,9 +53,9 @@ Gem::Specification.new do |s|
      "spec/support/config/routes.rb",
      "spec/support/log/development.log",
      "spec/support/log/test.log",
+     "spec/support/matcher.rb",
      "spec/support/pagseguro-test.yml",
      "spec/support/tmp/pagseguro-test.yml",
-     "spec/views/form.html.erb_spec.rb",
      "templates/config.yml"
   ]
   s.homepage = %q{http://github.com/fnando/pagseguro}
@@ -64,6 +65,7 @@ Gem::Specification.new do |s|
   s.summary = %q{A wrapper for the PagSeguro payment gateway.}
   s.test_files = [
     "spec/controllers/developer_controller_spec.rb",
+     "spec/helpers/helper_spec.rb",
      "spec/pagseguro/notification_spec.rb",
      "spec/pagseguro/order_spec.rb",
      "spec/pagseguro/pagseguro_spec.rb",
@@ -74,7 +76,7 @@ Gem::Specification.new do |s|
      "spec/support/app/models/user.rb",
      "spec/support/config/boot.rb",
      "spec/support/config/routes.rb",
-     "spec/views/form.html.erb_spec.rb"
+     "spec/support/matcher.rb"
   ]
 
   if s.respond_to? :specification_version then
