@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{pagseguro}
-  s.version = "0.1.0"
+  s.version = "0.1.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Nando Vieira"]
-  s.date = %q{2010-09-10}
+  s.date = %q{2010-10-16}
   s.description = %q{}
   s.email = %q{fnando.vieira@gmail.com}
   s.extra_rdoc_files = [
@@ -51,7 +51,6 @@ Gem::Specification.new do |s|
      "spec/support/config/database.yml",
      "spec/support/config/pagseguro.yml",
      "spec/support/config/routes.rb",
-     "spec/support/log/development.log",
      "spec/support/log/test.log",
      "spec/support/matcher.rb",
      "spec/support/pagseguro-test.yml",
