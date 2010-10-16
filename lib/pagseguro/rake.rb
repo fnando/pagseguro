@@ -89,9 +89,18 @@ module PagSeguro
       # Set note
       order["Anotacao"] = ENV["NOTE"].to_s
 
+      # Retrieve index
+      index = proc do |hash, value|
+        if hash.respond_to?(:key)
+          hash.key(value)
+        else
+          hash.index(value)
+        end
+      end
+
       # Set payment method and status
-      order["TipoPagamento"] = PagSeguro::Notification::PAYMENT_METHOD.key(payment_method)
-      order["StatusTransacao"] = PagSeguro::Notification::STATUS.key(status)
+      order["TipoPagamento"] = index[PagSeguro::Notification::PAYMENT_METHOD, payment_method]
+      order["StatusTransacao"] = index[PagSeguro::Notification::STATUS, status]
 
       # Finally, ping the configured return URL
       uri = URI.parse File.join(PagSeguro.config["base"], PagSeguro.config["return_to"])
