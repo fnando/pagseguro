@@ -60,15 +60,20 @@ module PagSeguro
         count
       end
 
-      # Replace all products
-      to_price = lambda {|s| s.gsub(/^(.*?)(.{2})$/, '\1,\2') }
+      to_price = proc do |price|
+        if price.to_s =~ /^(.*?)(.{2})$/
+          "#{$1},#{$2}"
+        else
+          "0,00"
+        end
+      end
 
       for index in (1..order["NumItens"])
         order["ProdID_#{index}"] = order.delete("item_id_#{index}")
         order["ProdDescricao_#{index}"] = order.delete("item_descr_#{index}")
         order["ProdValor_#{index}"] = to_price.call(order.delete("item_valor_#{index}"))
         order["ProdQuantidade_#{index}"] = order.delete("item_quant_#{index}")
-        order["ProdFrete_#{index}"] = order["item_frete_#{index}"] == "0" ? "0,00" : to_price.call(order.delete("item_frete_#{index}"))
+        order["ProdFrete_#{index}"] = to_price.call(order.delete("item_frete_#{index}"))
         order["ProdExtras_#{index}"] = "0,00"
       end
 

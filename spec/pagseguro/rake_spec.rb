@@ -18,11 +18,11 @@ describe PagSeguro::Rake do
     FileUtils.cp @origin, @destiny
 
     # Stub Digest::MD5#hexdigest to always return THEHASH
-    Digest::MD5.stub!(:hexdigest).and_return("THEHASH")
+    Digest::MD5.stub :hexdigest => "THEHASH"
 
     # Stub the URI#parse to return a mock
     @uri = mock("URI").as_null_object
-    URI.stub!(:parse).and_return(@uri)
+    URI.stub :parse => @uri
 
     # Load the pagseguro-test.yml file to
     # set some variables in order to compare it
@@ -55,7 +55,7 @@ describe PagSeguro::Rake do
   end
 
   it "should set number of items" do
-    params["NumItens"].should == 3
+    params["NumItens"].should == 4
   end
 
   it "should set note" do
@@ -72,7 +72,7 @@ describe PagSeguro::Rake do
 
   it "should set transaction date" do
     now = Time.now
-    Time.stub!(:now).and_return(now)
+    Time.stub :now => now
 
     PagSeguro::Rake.run
     params["DataTransacao"].should == now.strftime("%d/%m/%Y %H:%M:%S")
@@ -103,6 +103,13 @@ describe PagSeguro::Rake do
     params["ProdQuantidade_3"].should == "2"
     params["ProdExtras_3"].should == "0,00"
     params["ProdFrete_3"].should == "2,50"
+
+    params["ProdID_4"].should == "4"
+    params["ProdDescricao_4"].should == "Ruby Mug"
+    params["ProdValor_4"].should == "15,99"
+    params["ProdQuantidade_4"].should == "1"
+    params["ProdExtras_4"].should == "0,00"
+    params["ProdFrete_4"].should == "0,00"
   end
 
   it "should set client info" do

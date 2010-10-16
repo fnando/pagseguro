@@ -1,30 +1,36 @@
---- 
-ABC: !map:HashWithIndifferentAccess 
+---
+ABC: !map:HashWithIndifferentAccess
   commit: Pagar com PagSeguro
   email_cobranca: user@example.com
   encoding: utf-8
-  
+
   item_descr_1: Ruby 1.9 PDF
   item_frete_1: "0"
   item_id_1: "1"
   item_peso_1: "0"
   item_quant_1: "1"
   item_valor_1: "900"
-  
+
   item_descr_2: Ruby 1.9 Screencast
   item_frete_2: "0"
   item_id_2: "2"
   item_peso_2: "0"
   item_quant_2: "1"
   item_valor_2: "1250"
-  
+
   item_descr_3: Ruby T-Shirt
   item_frete_3: "250"
   item_id_3: "3"
   item_peso_3: "300"
   item_quant_3: "2"
   item_valor_3: "1989"
-  
+
+  item_descr_4: Ruby Mug
+  item_id_4: "4"
+  item_peso_4: "100"
+  item_quant_4: "1"
+  item_valor_4: "1599"
+
   moeda: BRL
   ref_transacao: ABC
   tipo: CP
