@@ -13,18 +13,18 @@ describe PagSeguro do
 
     it "should raise error if configuration is not found" do
       File.should_receive(:exist?).with(@config_file).and_return(false)
-      expect { PagSeguro.config }.to raise_error(PagSeguro::MissingConfigurationException)
+      expect { PagSeguro.config }.to raise_error(PagSeguro::MissingConfigurationError)
     end
 
     it "should raise error if no environment is set on config file" do
       YAML.should_receive(:load_file).with(@config_file).and_return({})
-      expect { PagSeguro.config }.to raise_error(PagSeguro::MissingEnvironmentException)
+      expect { PagSeguro.config }.to raise_error(PagSeguro::MissingEnvironmentError)
     end
 
     it "should raise error if config file is empty" do
       # YAML.load_file return false when file is zero-byte
       YAML.should_receive(:load_file).with(@config_file).and_return(false)
-      expect { PagSeguro.config }.to raise_error(PagSeguro::MissingEnvironmentException)
+      expect { PagSeguro.config }.to raise_error(PagSeguro::MissingEnvironmentError)
     end
 
     it "should return local url if developer mode is enabled" do
