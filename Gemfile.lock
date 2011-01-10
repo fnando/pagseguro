@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    pagseguro (0.1.2)
+    pagseguro (0.1.3.beta1)
 
 GEM
   remote: http://rubygems.org/
