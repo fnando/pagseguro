@@ -1,5 +1,5 @@
 module PagSeguro
-  class DeveloperController < ApplicationController
+  class DeveloperController < ::ActionController::Base
     skip_before_filter :verify_authenticity_token
     PAGSEGURO_ORDERS_FILE = File.join(Rails.root, "tmp", "pagseguro-#{Rails.env}.yml")
 

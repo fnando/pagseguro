@@ -1,8 +1,8 @@
 source :rubygems
 
-gem "rails", "3.0.1"
+gem "rails", "3.0.3"
 gem "fakeweb"
-gem "rspec-rails", "2.0.1"
+gem "rspec-rails", "2.4.1"
 gem "faker"
 gem "nokogiri"
 gem "sqlite3-ruby"
