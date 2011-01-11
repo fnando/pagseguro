@@ -2,6 +2,7 @@ require "net/https"
 require "uri"
 require "time"
 
+require "pagseguro/faker"
 require "pagseguro/rake"
 require "pagseguro/railtie"
 require "pagseguro/notification"

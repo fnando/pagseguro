@@ -4,7 +4,6 @@ module PagSeguro
 
     def run
       require "digest/md5"
-      require "faker"
 
       # Not running in developer mode? Exit!
       unless PagSeguro.developer?
@@ -38,15 +37,18 @@ module PagSeguro
       end
 
       # Set the client's info
-      order["CliNome"] = ENV["NAME"] || Faker::Name.name
-      order["CliEmail"] = ENV["EMAIL"] || Faker::Internet.email
-      order["CliEndereco"] = Faker::Address.street_name
+      name = ENV["NAME"] || Faker.name
+      email = ENV["EMAIL"] || Faker.email(name)
+
+      order["CliNome"] = name
+      order["CliEmail"] = email
+      order["CliEndereco"] = Faker.street_name
       order["CliNumero"] = rand(1000)
-      order["CliComplemento"] = Faker::Address.secondary_address
-      order["CliBairro"] = Faker::Address.city
-      order["CliCidade"] = Faker::Address.city
-      order["CliCEP"] = "12345678"
-      order["CliTelefone"] = "11 12345678"
+      order["CliComplemento"] = Faker.secondary_address
+      order["CliBairro"] = Faker.city
+      order["CliCidade"] = Faker.city
+      order["CliCEP"] = Faker.zipcode
+      order["CliTelefone"] = Faker.phone_number
 
       # Set the transaction date
       order["DataTransacao"] = Time.now.strftime("%d/%m/%Y %H:%M:%S")

@@ -32,10 +32,6 @@ O primeiro passo é instalar a biblioteca. Para isso, basta executar o comando
 
 	gem install pagseguro
 
-Se for utilizar o modo de desenvolvimento também precisará da gem Faker:
-
-	gem install faker
-
 Depois de instalar a biblioteca, você precisará executar gerar o arquivo de configuração, que deve residir em `config/pagseguro.yml`. Para gerar um arquivo de modelo execute
 
 	rails generate pagseguro:install

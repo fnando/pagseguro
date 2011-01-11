@@ -120,8 +120,8 @@ describe PagSeguro::Rake do
     params["CliComplemento"].should_not be_blank
     params["CliBairro"].should_not be_blank
     params["CliCidade"].should_not be_blank
-    params["CliCEP"].should == "12345678"
-    params["CliTelefone"].should == "11 12345678"
+    params["CliCEP"].should match(/\d{5}-\d{3}/)
+    params["CliTelefone"].should match(/\(\d{2}\) \d{4}-\d{4}/)
   end
 
   it "should set client e-mail" do
