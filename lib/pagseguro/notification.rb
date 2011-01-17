@@ -130,6 +130,11 @@ module PagSeguro
       super
     end
 
+    def respond_to?(method, include_private = false)
+      return true if MAPPING[method]
+      super
+    end
+
     # A wrapper to the params hash,
     # sanitizing the return to symbols
     def mapping_for(name)
