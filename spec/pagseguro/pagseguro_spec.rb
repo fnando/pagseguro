@@ -3,7 +3,7 @@ require "spec_helper"
 describe PagSeguro do
   describe "configuration" do
     before do
-      @config_file = Rails.root.join("config/pagseguro.yml")
+      @config_file = "#{Rails.root}/config/pagseguro.yml"
       @contents = YAML.load_file(@config_file)
       File.stub!(:exists?).and_return(true)
       YAML.stub!(:load_file).and_return(@contents)
