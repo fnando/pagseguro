@@ -66,7 +66,7 @@ module PagSeguro
 
     private
     def convert_unit(number, unit)
-      number = (number * unit).to_i unless number.nil? || number.kind_of?(Integer)
+      number = (BigDecimal.new(number.to_s) * unit).to_i unless number.nil? || number.kind_of?(Integer)
       number
     end
   end
