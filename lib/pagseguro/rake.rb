@@ -5,6 +5,11 @@ module PagSeguro
     def run
       require "digest/md5"
 
+      env = ENV.inject({}) do |buffer, (name, value)|
+        value = value.respond_to?(:force_encoding) ? value.dup.force_encoding("UTF-8") : value
+        buffer.merge(name => value)
+      end
+
       # Not running in developer mode? Exit!
       unless PagSeguro.developer?
         puts "=> [PagSeguro] Can only notify development URLs"
@@ -28,17 +33,17 @@ module PagSeguro
       end
 
       # Get the specified order
-      order = orders[ENV["ID"]]
+      order = orders[env["ID"]]
 
       # Not again! No order! Exit!
       unless order
-        puts "=> [PagSeguro] The order #{ENV['ID'].inspect} could not be found. Exiting now!"
+        puts "=> [PagSeguro] The order #{env['ID'].inspect} could not be found. Exiting now!"
         exit 1
       end
 
       # Set the client's info
-      name = ENV["NAME"] || Faker.name
-      email = ENV["EMAIL"] || Faker.email(name)
+      name = env.fetch("NAME", Faker.name)
+      email = env.fetch("EMAIL", Faker.email)
 
       order["CliNome"] = name
       order["CliEmail"] = email
@@ -80,16 +85,16 @@ module PagSeguro
       end
 
       # Retrieve the specified status or default to :completed
-      status = (ENV["STATUS"] || :completed).to_sym
+      status = env.fetch("STATUS", :completed).to_sym
 
       # Retrieve the specified payment method or default to :credit_card
-      payment_method = (ENV["PAYMENT_METHOD"] || :credit_card).to_sym
+      payment_method = env.fetch("PAYMENT_METHOD", :credit_card).to_sym
 
       # Set a random transaction id
       order["TransacaoID"] = Digest::MD5.hexdigest(Time.now.to_s)
 
       # Set note
-      order["Anotacao"] = ENV["NOTE"].to_s
+      order["Anotacao"] = env["NOTE"].to_s
 
       # Retrieve index
       index = proc do |hash, value|

@@ -64,6 +64,13 @@ describe PagSeguro::Order do
     p[:shipping].should == 367
   end
 
+  specify "bug fix: should convert 1.15 correctly" do
+    @order << @product.merge(:price => 1.15)
+
+    p = @order.products.first
+    p[:price].should == 115
+  end
+
   it "should convert big decimal to cents" do
     @product.merge!(:price => BigDecimal.new("199.00"))
     @order << @product

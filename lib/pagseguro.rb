@@ -1,6 +1,7 @@
 require "net/https"
 require "uri"
 require "time"
+require "bigdecimal"
 
 require "pagseguro/base"
 require "pagseguro/faker"

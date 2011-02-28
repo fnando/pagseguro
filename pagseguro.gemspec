@@ -22,4 +22,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec-rails", "~> 2.4.1"
   s.add_development_dependency "nokogiri"
   s.add_development_dependency "sqlite3-ruby"
+  s.add_development_dependency "ruby-debug19" if RUBY_VERSION >= "1.9"
 end
