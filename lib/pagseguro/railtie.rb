@@ -19,7 +19,7 @@ module PagSeguro
       ::ActionController::Base.send(:include, PagSeguro::ActionController)
     end
 
-    ::ActiveSupport.on_load(:action_controller) do
+    config.after_initialize do
       require "pagseguro/developer_controller" if PagSeguro.developer?
     end
   end
