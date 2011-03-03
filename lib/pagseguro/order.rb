@@ -1,7 +1,26 @@
 module PagSeguro
   class Order
+    # Map all billing attributes that will be added as form inputs.
+    BILLING_MAPPING = {
+      :name                  => "cliente_nome",
+      :address_zipcode       => "cliente_cep",
+      :address_street        => "cliente_end",
+      :address_number        => "cliente_num",
+      :address_complement    => "cliente_compl",
+      :address_neighbourhood => "cliente_bairro",
+      :address_city          => "cliente_cidade",
+      :address_state         => "cliente_uf",
+      :address_country       => "cliente_pais",
+      :phone_area_code       => "cliente_ddd",
+      :phone_number          => "cliente_tel",
+      :email                 => "cliente_email"
+    }
+
     # The list of products added to the order
     attr_accessor :products
+
+    # The billing info that will be sent to PagSeguro.
+    attr_accessor :billing
 
     # Define the shipping type.
     # Can be EN (PAC) or SD (Sedex)
@@ -10,6 +29,7 @@ module PagSeguro
     def initialize(order_id = nil)
       reset!
       self.id = order_id
+      self.billing = {}
     end
 
     # Set the order identifier. Should be a unique

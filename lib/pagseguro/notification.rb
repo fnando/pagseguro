@@ -45,14 +45,14 @@ module PagSeguro
     # Normalize the specified hash converting all data to UTF-8
     def normalize(hash)
       each_value(hash) do |value|
-        value.to_s.unpack('C*').pack('U*')
+        Utils.to_utf8(value)
       end
     end
 
     # Denormalize the specified hash converting all data to ISO-8859-1
     def denormalize(hash)
       each_value(hash) do |value|
-        value.to_s.unpack('U*').pack('C*')
+        Utils.to_iso8859(value)
       end
     end
 

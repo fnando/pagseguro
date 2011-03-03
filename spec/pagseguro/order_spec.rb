@@ -83,4 +83,12 @@ describe PagSeguro::Order do
     @order << @product.merge(:weight => 1.3)
     @order.products.first[:weight].should == 1300
   end
+
+  it "should respond to billing attribute" do
+    @order.should respond_to(:billing)
+  end
+
+  it "should initialize billing attribute" do
+    @order.billing.should be_instance_of(Hash)
+  end
 end
