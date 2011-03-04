@@ -23,6 +23,14 @@ describe PagSeguro::Helper do
     it { should have_input(:type => "submit", :value => "Pagar com PagSeguro") }
   end
 
+  context "when running development mode" do
+    before do
+      PagSeguro.stub :developer? => true
+    end
+
+    it { should have_attr("accept-charset", "UTF-8") }
+  end
+
   it "should include shipping type" do
     @order.shipping_type = "SD"
     subject.should have_input(:name => "tipo_frete", :value => "SD")

@@ -39,7 +39,7 @@ module PagSeguro
     # Expects the params object from the current request
     def initialize(params, token = nil)
       @token = token
-      @params = normalize(params)
+      @params = PagSeguro.utf8? ? params : normalize(params)
     end
 
     # Normalize the specified hash converting all data to UTF-8
