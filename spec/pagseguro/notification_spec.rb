@@ -203,6 +203,26 @@ describe PagSeguro::Notification do
       p[:fees].should == 2.53
       p[:shipping].should == 3.50
     end
+    
+    specify "bug fix: should work correctly when price is 0.9" do
+      set_product!({
+        :description => "Rails Application Templates",
+        :price => ",90",
+        :id => 8,
+        :fees => "2,53",
+        :shipping => "3,50",
+        :quantity => 10
+      })
+
+      p = @notification.products.first
+
+      p[:description].should == "Rails Application Templates"
+      p[:price].should == 0.9
+      p[:id].should == "8"
+      p[:quantity].should == 10
+      p[:fees].should == 2.53
+      p[:shipping].should == 3.50
+    end
   end
 
   describe "confirmation" do
