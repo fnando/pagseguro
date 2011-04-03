@@ -17,10 +17,10 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  s.add_development_dependency "rails", "~> 3.0.3"
-  s.add_development_dependency "fakeweb"
-  s.add_development_dependency "rspec-rails", "~> 2.4.1"
-  s.add_development_dependency "nokogiri"
-  s.add_development_dependency "sqlite3-ruby"
+  s.add_development_dependency "rails"        , "~> 3.0.5"
+  s.add_development_dependency "fakeweb"      , "~> 1.3.0"
+  s.add_development_dependency "rspec-rails"  , "~> 2.5.0"
+  s.add_development_dependency "nokogiri"     , "~> 1.4.4"
+  s.add_development_dependency "sqlite3-ruby" , "~> 1.3.3"
   s.add_development_dependency "ruby-debug19" if RUBY_VERSION >= "1.9"
 end
