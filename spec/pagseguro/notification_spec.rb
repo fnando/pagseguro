@@ -203,6 +203,16 @@ describe PagSeguro::Notification do
       p[:fees].should == 2.53
       p[:shipping].should == 3.50
     end
+
+    specify "bug fix: should work correctly when price is 0.9" do
+      set_product!({
+        :price => ",90",
+      })
+
+      p = @notification.products.first
+
+      p[:price].should == 0.9
+    end
   end
 
   describe "confirmation" do

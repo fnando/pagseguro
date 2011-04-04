@@ -167,6 +167,7 @@ module PagSeguro
 
     # Convert amount format to float
     def to_price(amount)
+      amount = "0#{amount}" if amount =~ /^\,/
       amount.to_s.gsub(/[^\d]/, "").gsub(/^(\d+)(\d{2})$/, '\1.\2').to_f
     end
 
