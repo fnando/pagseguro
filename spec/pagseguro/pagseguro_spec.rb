@@ -11,16 +11,6 @@ describe PagSeguro do
       module PagSeguro; @@config = nil; end
     end
 
-    it "should set encoding as UTF-8 when running in development mode" do
-      PagSeguro.stub :developer? => true
-      PagSeguro.encoding.should == "UTF-8"
-    end
-
-    it "should set encoding as ISO-8859-1 when running in production mode" do
-      PagSeguro.stub :developer? => false
-      PagSeguro.encoding.should == "ISO-8859-1"
-    end
-
     it "should raise error if configuration is not found" do
       File.should_receive(:exist?).with(@config_file).and_return(false)
       expect { PagSeguro.config }.to raise_error(PagSeguro::MissingConfigurationError)

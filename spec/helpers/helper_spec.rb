@@ -12,23 +12,15 @@ describe PagSeguro::Helper do
   }
 
   context "with default attributes" do
-    it { should have_attr("accept-charset", "ISO-8859-1") }
     it { should have_attr("action", PagSeguro::GATEWAY_URL) }
     it { should have_attr("class", "pagseguro") }
+    it { should have_input(:name => "encoding", :value => "UTF-8") }
     it { should have_input(:name => "tipo", :value => "CP") }
     it { should have_input(:name => "moeda", :value => "BRL") }
     it { should have_input(:name => "ref_transacao", :value => "I1001") }
     it { should_not have_input(:name => "tipo_frete") }
     it { should have_input(:name => "email_cobranca", :value => "john@doe.com") }
     it { should have_input(:type => "submit", :value => "Pagar com PagSeguro") }
-  end
-
-  context "when running development mode" do
-    before do
-      PagSeguro.stub :developer? => true
-    end
-
-    it { should have_attr("accept-charset", "UTF-8") }
   end
 
   it "should include shipping type" do

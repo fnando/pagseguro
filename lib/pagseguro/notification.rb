@@ -39,20 +39,13 @@ module PagSeguro
     # Expects the params object from the current request
     def initialize(params, token = nil)
       @token = token
-      @params = PagSeguro.utf8? ? params : normalize(params)
+      @params = PagSeguro.developer? ? params : normalize(params)
     end
 
     # Normalize the specified hash converting all data to UTF-8
     def normalize(hash)
       each_value(hash) do |value|
         Utils.to_utf8(value)
-      end
-    end
-
-    # Denormalize the specified hash converting all data to ISO-8859-1
-    def denormalize(hash)
-      each_value(hash) do |value|
-        Utils.to_iso8859(value)
       end
     end
 
@@ -65,12 +58,12 @@ module PagSeguro
 
         for i in (1..params["NumItens"].to_i)
           items << {
-            :id => params["ProdID_#{i}"],
+            :id          => params["ProdID_#{i}"],
             :description => params["ProdDescricao_#{i}"],
-            :quantity => params["ProdQuantidade_#{i}"].to_i,
-            :price => to_price(params["ProdValor_#{i}"]),
-            :shipping => to_price(params["ProdFrete_#{i}"]),
-            :fees => to_price(params["ProdExtras_#{i}"])
+            :quantity    => params["ProdQuantidade_#{i}"].to_i,
+            :price       => to_price(params["ProdValor_#{i}"]),
+            :shipping    => to_price(params["ProdFrete_#{i}"]),
+            :fees        => to_price(params["ProdExtras_#{i}"])
           }
         end
 
@@ -178,7 +171,7 @@ module PagSeguro
       return true if PagSeguro.developer?
 
       # include the params to validate our request
-      request_params = denormalize params.merge({
+      request_params = params.merge({
         :Comando => "validar",
         :Token => @token || PagSeguro.config["authenticity_token"]
       }).dup

@@ -283,23 +283,6 @@ describe PagSeguro::Notification do
 
       @notification.valid?
     end
-
-    it "should propagate params in ISO-8859-1" do
-      param!("CliNome", "João Doão")
-      PagSeguro.stub!(:config).and_return("authenticity_token" => "ABCDEF")
-
-      post = mock("post").as_null_object
-      post.should_receive(:set_form_data).with({
-        :Comando => "validar",
-        :Token => "ABCDEF",
-        "CliNome" => to_iso("João Doão")
-      })
-
-      Net::HTTP.should_receive(:new).and_return(mock("http").as_null_object)
-      Net::HTTP::Post.should_receive(:new).and_return(post)
-
-      @notification.valid?
-    end
   end
 
   private
@@ -313,10 +296,6 @@ describe PagSeguro::Notification do
 
     def param!(name, value)
       @notification.params.merge!(name => value)
-    end
-
-    def to_iso(str)
-      str.unpack('U*').pack('C*')
     end
 
     def set_product!(options={})

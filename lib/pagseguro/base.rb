@@ -50,20 +50,6 @@ module PagSeguro
     config? && config["developer"] == true
   end
 
-  # Detect if current encoding is UTF-8
-  def utf8?
-    encoding == "UTF-8"
-  end
-
-  # Set encoding based on running environment.
-  def encoding
-    if developer?
-      "UTF-8"
-    else
-      "ISO-8859-1"
-    end
-  end
-
   class MissingEnvironmentError < StandardError; end
   class MissingConfigurationError < StandardError; end
 end

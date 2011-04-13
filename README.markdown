@@ -1,10 +1,8 @@
-PAGSEGURO
-=========
+# PAGSEGURO
 
 Este é um plugin do Ruby on Rails que permite utilizar o [PagSeguro](https://pagseguro.uol.com.br/?ind=689659), gateway de pagamentos do [UOL](http://uol.com.br).
 
-SOBRE O PAGSEGURO
------------------
+## SOBRE O PAGSEGURO
 
 ### Carrinho Próprio
 
@@ -16,15 +14,13 @@ Após o processo de compra e pagamento, o usuário é enviado de volta a seu sit
 
 Antes de enviar o usuário para essa URL, o robô do PagSeguro faz um POST para ela, em segundo plano, com os dados e status da transação. Lendo esse POST, você pode obter o status do pedido. Se o pagamento entrou em análise, ou se o usuário pagou usando boleto bancário, o status será "Aguardando Pagamento" ou "Em Análise". Nesses casos, quando a transação for confirmada (o que pode acontecer alguns dias depois) a loja receberá outro POST, informando o novo status. **Cada vez que a transação muda de status, um POST é enviado.**
 
-REQUISITOS
-----------
+## REQUISITOS
 
 A versão atual que está sendo mantida suporta Rails 3.0.0 ou superior.
 
 Se você quiser esta biblioteca em versão mais antigas do Rails (2.3, por exemplo) deverá usar o [branch legacy](http://github.com/fnando/pagseguro/tree/legacy). Note que esta versão não será mais atualizada com novas funcionalidades; apenas correções de bugs serão aplicadas.
 
-COMO USAR
----------
+## COMO USAR
 
 ### Configuração
 
@@ -187,21 +183,24 @@ O ID do pedido deve ser o mesmo que foi informado quando você instanciou a clas
 * `canceled`: Cancelado
 * `refunded`: Devolvido
 
-AUTOR:
-------
+### Codificação (Encoding)
+
+Esta biblioteca assume que você está usando UTF-8 como codificação de seu projeto. Neste caso, o único ponto onde os dados são convertidos para UTF-8 é quando uma notificação é enviada do UOL em ISO-8859-1.
+
+Se você usa sua aplicação como ISO-8859-1, esta biblioteca NÃO IRÁ FUNCIONAR. Nenhum patch dando suporte ao ISO-8859-1 será aplicado; você sempre pode manter o seu próprio fork, caso precise.
+
+## AUTOR:
 
 Nando Vieira (<http://simplesideias.com.br>)
 
 Recomendar no [Working With Rails](http://www.workingwithrails.com/person/7846-nando-vieira)
 
-COLABORADORES:
---------------
+## COLABORADORES:
 
 * Elomar (<http://github.com/elomar>)
 * Rafael (<http://github.com/rafaels>)
 
-LICENÇA:
---------
+## LICENÇA:
 
 (The MIT License)
 
