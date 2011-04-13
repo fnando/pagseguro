@@ -18,7 +18,7 @@ Antes de enviar o usuário para essa URL, o robô do PagSeguro faz um POST para 
 
 A versão atual que está sendo mantida suporta Rails 3.0.0 ou superior.
 
-Se você quiser esta biblioteca em versão mais antigas do Rails (2.3, por exemplo) deverá usar o [branch legacy](http://github.com/fnando/pagseguro/tree/legacy). Note que esta versão não será mais atualizada com novas funcionalidades; apenas correções de bugs serão aplicadas.
+Se você quiser esta biblioteca em versão mais antigas do Rails (2.3, por exemplo) deverá usar o [branch legacy](http://github.com/fnando/pagseguro/tree/legacy), QUE NÃO É MAIS MANTIDO.
 
 ## COMO USAR
 
