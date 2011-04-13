@@ -2,7 +2,7 @@ module PagSeguro
   module Version
     MAJOR = 0
     MINOR = 1
-    PATCH = 8
-    STRING = "#{MAJOR}.#{MINOR}.#{PATCH}"
+    PATCH = 9
+    STRING = "#{MAJOR}.#{MINOR}.#{PATCH}.beta.0"
   end
 end
