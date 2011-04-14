@@ -17,6 +17,8 @@ module PagSeguro
     initializer "pagseguro.initialize" do |app|
       ::ActionView::Base.send(:include, PagSeguro::Helper)
       ::ActionController::Base.send(:include, PagSeguro::ActionController)
+
+      app.paths.app.views << File.dirname(__FILE__) + "/views"
     end
 
     config.after_initialize do
