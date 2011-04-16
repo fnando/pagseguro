@@ -21,17 +21,10 @@
 			<%= hidden_field_tag PagSeguro::Order::BILLING_MAPPING[name.to_sym], value %>
 		<% end %>
 
-               <% if options[:image].nil? %>
-<<<<<<< HEAD
+                <% if options[:image].nil? %>
                   <%= submit_tag options[:submit], :class=>"pagseguro_submit_tag" %>
                 <% else %>
                   <%= image_submit_tag options[:image], :class=>"pagseguro_submit_tag" %>
                 <% end %>
-=======
-                  <%= submit_tag options[:submit], :class=>"pagseguro_submit_tag"%>
-                <%else%>
-                  <%= image_submit_tag options[:image], :class=>"pagseguro_submit_tag" %>
-                <%end%>
->>>>>>> 6b467ce28245ef260321bcb57181e0e07b6b1f14
 	</div>
 </form>
