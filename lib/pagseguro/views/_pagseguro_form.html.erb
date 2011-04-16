@@ -22,9 +22,16 @@
 		<% end %>
 
                <% if options[:image].nil? %>
+<<<<<<< HEAD
                   <%= submit_tag options[:submit], :class=>"pagseguro_submit_tag" %>
                 <% else %>
                   <%= image_submit_tag options[:image], :class=>"pagseguro_submit_tag" %>
                 <% end %>
+=======
+                  <%= submit_tag options[:submit], :class=>"pagseguro_submit_tag"%>
+                <%else%>
+                  <%= image_submit_tag options[:image], :class=>"pagseguro_submit_tag" %>
+                <%end%>
+>>>>>>> 6b467ce28245ef260321bcb57181e0e07b6b1f14
 	</div>
 </form>
