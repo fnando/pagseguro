@@ -28,6 +28,12 @@ O primeiro passo é instalar a biblioteca. Para isso, basta executar o comando
 
 	gem install pagseguro
 
+Adicione a biblioteca ao arquivo Gemfile:
+
+	gem "pagseguro", "~> 0.1.10"
+
+Lembre-se de utilizar a versão que você acabou de instalar.
+
 Depois de instalar a biblioteca, você precisará executar gerar o arquivo de configuração, que deve residir em `config/pagseguro.yml`. Para gerar um arquivo de modelo execute
 
 	rails generate pagseguro:install
