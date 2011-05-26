@@ -2,122 +2,132 @@
 require "spec_helper"
 
 describe PagSeguro::Notification do
-  before do
-    @the_params = {}
-    @notification = PagSeguro::Notification.new(@the_params)
-  end
+  subject { PagSeguro::Notification.new(@the_params) }
+  let(:payload) { YAML.load_file File.dirname(__FILE__) + "/../fixtures/notification.yml" }
+  before { @the_params = {} }
 
   it "should not request the confirmation url when running developer mode" do
     PagSeguro.stub :developer? => true
     Net::HTTP.should_not_receive(:new)
-    @notification.should be_valid
+    subject.should be_valid
+  end
+
+  describe "#to_hash" do
+    subject { PagSeguro::Notification.new(payload) }
+
+    PagSeguro::Notification::MAPPING.each do |name, value|
+      it "includes #{name}" do
+        subject.to_hash.should have_key(name)
+        subject.to_hash[name].should_not be_nil
+      end
+    end
   end
 
   describe "status mapping" do
     it "should be completed" do
       set_status!("Completo")
-      @notification.status.should == :completed
+      subject.status.should == :completed
     end
 
     it "should be pending" do
       set_status!("Aguardando Pagto")
-      @notification.status.should == :pending
+      subject.status.should == :pending
     end
 
     it "should be approved" do
       set_status!("Aprovado")
-      @notification.status.should == :approved
+      subject.status.should == :approved
     end
 
     it "should be verifying" do
       set_status!("Em Análise")
-      @notification.status.should == :verifying
+      subject.status.should == :verifying
     end
 
     it "should be canceled" do
       set_status!("Cancelado")
-      @notification.status.should == :canceled
+      subject.status.should == :canceled
     end
 
     it "should be refunded" do
       set_status!("Devolvido")
-      @notification.status.should == :refunded
+      subject.status.should == :refunded
     end
   end
 
   describe "payment mapping" do
     it "should be credit card" do
       set_payment!("Cartão de Crédito")
-      @notification.payment_method.should == :credit_card
+      subject.payment_method.should == :credit_card
     end
 
     it "should be invoice" do
       set_payment!("Boleto")
-      @notification.payment_method.should == :invoice
+      subject.payment_method.should == :invoice
     end
 
     it "should be pagseguro" do
       set_payment!("Pagamento")
-      @notification.payment_method.should == :pagseguro
+      subject.payment_method.should == :pagseguro
     end
 
     it "should be online transfer" do
-      set_payment!("Pagamento online")
-      @notification.payment_method.should == :online_transfer
+      set_payment!("Pagamento Online")
+      subject.payment_method.should == :online_transfer
     end
   end
 
   describe "buyer mapping" do
     it "should return client name" do
       param!("CliNome", "John Doe")
-      @notification.buyer[:name].should == "John Doe"
+      subject.buyer[:name].should == "John Doe"
     end
 
     it "should return client email" do
       param!("CliEmail", "john@doe.com")
-      @notification.buyer[:email].should == "john@doe.com"
+      subject.buyer[:email].should == "john@doe.com"
     end
 
     it "should return client phone" do
       param!("CliTelefone", "11 55551234")
-      @notification.buyer[:phone][:area_code].should == "11"
-      @notification.buyer[:phone][:number].should == "55551234"
+      subject.buyer[:phone][:area_code].should == "11"
+      subject.buyer[:phone][:number].should == "55551234"
     end
 
     describe "address" do
       it "should return street" do
         param!("CliEndereco", "Av. Paulista")
-        @notification.buyer[:address][:street].should == "Av. Paulista"
+        subject.buyer[:address][:street].should == "Av. Paulista"
       end
 
       it "should return number" do
         param!("CliNumero", "2500")
-        @notification.buyer[:address][:number].should == "2500"
+        subject.buyer[:address][:number].should == "2500"
       end
 
       it "should return complements" do
         param!("CliComplemento", "Apto 123-A")
-        @notification.buyer[:address][:complements].should == "Apto 123-A"
+        subject.buyer[:address][:complements].should == "Apto 123-A"
       end
 
       it "should return neighbourhood" do
         param!("CliBairro", "Bela Vista")
-        @notification.buyer[:address][:neighbourhood].should == "Bela Vista"
+        subject.buyer[:address][:neighbourhood].should == "Bela Vista"
       end
 
       it "should return city" do
         param!("CliCidade", "São Paulo")
-        @notification.buyer[:address][:city].should == "São Paulo"
+        subject.buyer[:address][:city].should == "São Paulo"
       end
 
       it "should return state" do
         param!("CliEstado", "SP")
-        @notification.buyer[:address][:state].should == "SP"
+        subject.buyer[:address][:state].should == "SP"
       end
 
       it "should return postal code" do
         param!("CliCEP", "01310300")
-        @notification.buyer[:address][:postal_code].should == "01310300"
+        subject.buyer[:address][:postal_code].should == "01310300"
       end
     end
   end
@@ -125,35 +135,35 @@ describe PagSeguro::Notification do
   describe "other mappings" do
     it "should map the order id" do
       param!("Referencia", "ABCDEF")
-      @notification.order_id.should == "ABCDEF"
+      subject.order_id.should == "ABCDEF"
     end
 
     it "should map the processing date" do
       param!("DataTransacao", "04/09/2009 16:23:44")
-      @notification.processed_at.should == Time.parse("2009-09-04 16:23:44").utc
+      subject.processed_at.should == Time.parse("2009-09-04 16:23:44").utc
     end
 
     it "should map the shipping type" do
       param!("TipoFrete", "SD")
-      @notification.shipping_type.should == "SD"
+      subject.shipping_type.should == "SD"
     end
 
     it "should map the client annotation" do
       param!("Anotacao", "Gift package, please!")
-      @notification.notes.should == "Gift package, please!"
+      subject.notes.should == "Gift package, please!"
     end
 
     it "should map the shipping price" do
       param!("ValorFrete", "199,38")
-      @notification.shipping.should == 199.38
+      subject.shipping.should == 199.38
 
       param!("ValorFrete", "1.799,38")
-      @notification.shipping.should == 1799.38
+      subject.shipping.should == 1799.38
     end
 
     it "should map the transaction id" do
       param!("TransacaoID", "ABCDEF")
-      @notification.transaction_id.should == "ABCDEF"
+      subject.transaction_id.should == "ABCDEF"
     end
   end
 
@@ -164,17 +174,17 @@ describe PagSeguro::Notification do
 
     it "should map 5 products" do
       param!("NumItens", "5")
-      @notification.products.should have(5).items
+      subject.products.should have(5).items
     end
 
     it "should map 25 products" do
       param!("NumItens", "25")
-      @notification.products.should have(25).items
+      subject.products.should have(25).items
     end
 
     it "should set attributes with defaults" do
       set_product! :description => "Ruby 1.9 PDF", :price => "12,90", :id => 1
-      p = @notification.products.first
+      p = subject.products.first
 
       p[:description].should == "Ruby 1.9 PDF"
       p[:price].should == 12.90
@@ -194,7 +204,7 @@ describe PagSeguro::Notification do
         :quantity => 10
       })
 
-      p = @notification.products.first
+      p = subject.products.first
 
       p[:description].should == "Rails Application Templates"
       p[:price].should == 1.00
@@ -209,7 +219,7 @@ describe PagSeguro::Notification do
         :price => ",90",
       })
 
-      p = @notification.products.first
+      p = subject.products.first
 
       p[:price].should == 0.9
     end
@@ -219,26 +229,26 @@ describe PagSeguro::Notification do
     before do
       PagSeguro.stub :developer? => false
       @url = PagSeguro::Notification::API_URL
-      @notification.stub :api_url => @url
+      subject.stub :api_url => @url
     end
 
     it "should be valid" do
       FakeWeb.register_uri(:post, @url, :body => "VERIFICADO")
-      @notification.should be_valid
+      subject.should be_valid
     end
 
     it "should be invalid" do
       FakeWeb.register_uri(:post, @url, :body => "")
-      @notification.should_not be_valid
+      subject.should_not be_valid
     end
 
     it "should force validation" do
       FakeWeb.register_uri(:post, @url, :body => "")
-      @notification.should_not be_valid
+      subject.should_not be_valid
 
       FakeWeb.register_uri(:post, @url, :body => "VERIFICADO")
-      @notification.should_not be_valid
-      @notification.should be_valid(:nocache)
+      subject.should_not be_valid
+      subject.should be_valid(:nocache)
     end
 
     it "should set the authenticity token from the initialization" do
@@ -262,7 +272,7 @@ describe PagSeguro::Notification do
       Net::HTTP.should_receive(:new).and_return(mock("http").as_null_object)
       Net::HTTP::Post.should_receive(:new).and_return(post)
 
-      @notification.valid?
+      subject.valid?
     end
 
     it "should propagate params" do
@@ -281,7 +291,7 @@ describe PagSeguro::Notification do
       Net::HTTP.should_receive(:new).and_return(mock("http").as_null_object)
       Net::HTTP::Post.should_receive(:new).and_return(post)
 
-      @notification.valid?
+      subject.valid?
     end
   end
 
@@ -295,7 +305,7 @@ describe PagSeguro::Notification do
     end
 
     def param!(name, value)
-      @notification.params.merge!(name => value)
+      subject.params.merge!(name => value)
     end
 
     def set_product!(options={})
@@ -318,8 +328,8 @@ describe PagSeguro::Notification do
         "ProdQuantidade_#{i}" => options[:quantity].to_s
       }
 
-      @notification.params.merge!(@__products.last)
-      @notification.params.merge!("NumItens" => i)
+      subject.params.merge!(@__products.last)
+      subject.params.merge!("NumItens" => i)
       @__products.last
     end
 end

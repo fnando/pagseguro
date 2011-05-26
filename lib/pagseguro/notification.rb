@@ -33,7 +33,7 @@ module PagSeguro
       "Cartão de Crédito" => :credit_card,
       "Boleto"            => :invoice,
       "Pagamento"         => :pagseguro,
-      "Pagamento online"  => :online_transfer
+      "Pagamento Online"  => :online_transfer
     }
 
     # The Rails params hash.
@@ -167,6 +167,14 @@ module PagSeguro
       @valid = nil if force
       @valid = validates? if @valid.nil?
       @valid
+    end
+
+    # Return all useful properties in a single hash.
+    #
+    def to_hash
+      MAPPING.inject({}) do |buffer, (name,value)|
+        buffer.merge(name => __send__(name))
+      end
     end
 
     private

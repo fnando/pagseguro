@@ -1,0 +1,29 @@
+---
+VendedorEmail: vendedor@example.com
+TransacaoID: 2339ADE917F744DEBEDA890C826386EG
+Referencia: "1"
+Extras: "0,00"
+TipoFrete: FR
+ValorFrete: "0,00"
+Anotacao: "Pagamento do carro"
+DataTransacao: 26/05/2011 12:17:47
+TipoPagamento: Pagamento Online
+StatusTransacao: Aprovado
+CliNome: "Jos\xC3\xA9 da Silva"
+CliEmail: comprador@exemple.com
+CliEndereco: RUA DE CIMA
+CliNumero: "1145"
+CliComplemento: apto 1
+CliBairro: "Pequen\xC3\xB3polis"
+CliCidade: SAO PAULO
+CliEstado: SP
+CliCEP: "04253000"
+CliTelefone: 11 75379467
+NumItens: "1"
+Parcelas: "1"
+ProdID_1: "9"
+ProdDescricao_1: Carro Zero Km
+ProdValor_1: "15,00"
+ProdQuantidade_1: "1"
+ProdFrete_1: "0,00"
+ProdExtras_1: "0,00"
