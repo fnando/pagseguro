@@ -33,7 +33,8 @@ module PagSeguro
       "Cartão de Crédito" => :credit_card,
       "Boleto"            => :invoice,
       "Pagamento"         => :pagseguro,
-      "Pagamento Online"  => :online_transfer
+      "Pagamento Online"  => :online_transfer,
+      "Doação"            => :donation
     }
 
     # The Rails params hash.

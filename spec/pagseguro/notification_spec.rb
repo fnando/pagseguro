@@ -75,6 +75,11 @@ describe PagSeguro::Notification do
       set_payment!("Pagamento Online")
       subject.payment_method.should == :online_transfer
     end
+
+    it "should be donation" do
+      set_payment!("Doação")
+      subject.payment_method.should == :donation
+    end
   end
 
   describe "buyer mapping" do
@@ -296,40 +301,40 @@ describe PagSeguro::Notification do
   end
 
   private
-    def set_status!(value)
-      param!("StatusTransacao", value)
-    end
+  def set_status!(value)
+    param!("StatusTransacao", value)
+  end
 
-    def set_payment!(value)
-      param!("TipoPagamento", value)
-    end
+  def set_payment!(value)
+    param!("TipoPagamento", value)
+  end
 
-    def param!(name, value)
-      subject.params.merge!(name => value)
-    end
+  def param!(name, value)
+    subject.params.merge!(name => value)
+  end
 
-    def set_product!(options={})
-      @__products ||= []
+  def set_product!(options={})
+    @__products ||= []
 
-      i = @__products.size + 1
+    i = @__products.size + 1
 
-      options = {
-        :quantity => 1,
-        :fees => "0,00",
-        :shipping => "0,00"
-      }.merge(options)
+    options = {
+      :quantity => 1,
+      :fees => "0,00",
+      :shipping => "0,00"
+    }.merge(options)
 
-      @__products << {
-        "ProdID_#{i}" => options[:id].to_s,
-        "ProdDescricao_#{i}" => options[:description].to_s,
-        "ProdValor_#{i}" => options[:price].to_s,
-        "ProdFrete_#{i}" => options[:shipping].to_s,
-        "ProdExtras_#{i}" => options[:fees].to_s,
-        "ProdQuantidade_#{i}" => options[:quantity].to_s
-      }
+    @__products << {
+      "ProdID_#{i}" => options[:id].to_s,
+      "ProdDescricao_#{i}" => options[:description].to_s,
+      "ProdValor_#{i}" => options[:price].to_s,
+      "ProdFrete_#{i}" => options[:shipping].to_s,
+      "ProdExtras_#{i}" => options[:fees].to_s,
+      "ProdQuantidade_#{i}" => options[:quantity].to_s
+    }
 
-      subject.params.merge!(@__products.last)
-      subject.params.merge!("NumItens" => i)
-      @__products.last
-    end
+    subject.params.merge!(@__products.last)
+    subject.params.merge!("NumItens" => i)
+    @__products.last
+  end
 end
