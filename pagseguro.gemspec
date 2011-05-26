@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  s.add_development_dependency "rails"        , "~> 3.0.5"
+  s.add_development_dependency "rails"        , "~> 3.0"
   s.add_development_dependency "fakeweb"      , "~> 1.3.0"
   s.add_development_dependency "rspec-rails"  , "~> 2.5.0"
   s.add_development_dependency "nokogiri"     , "~> 1.4.4"

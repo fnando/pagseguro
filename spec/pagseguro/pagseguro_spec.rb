@@ -5,8 +5,8 @@ describe PagSeguro do
     before do
       @config_file = Rails.root.join("config/pagseguro.yml")
       @contents = YAML.load_file(@config_file)
-      File.stub!(:exists?).and_return(true)
-      YAML.stub!(:load_file).and_return(@contents)
+      File.stub :exists? => true
+      YAML.stub :load_file => @contents
 
       module PagSeguro; @@config = nil; end
     end
@@ -34,14 +34,14 @@ describe PagSeguro do
 
     it "should return real url if developer mode is disabled" do
       PagSeguro.should_receive(:developer?).and_return(false)
-      PagSeguro.gateway_url.should == "https://pagseguro.uol.com.br/security/webpagamentos/webpagto.aspx"
+      PagSeguro.gateway_url.should == "https://pagseguro.uol.com.br/pagseguro-ws/checkout/NPI.jhtml"
     end
 
     it "should read configuration developer mode" do
-      PagSeguro.stub!(:config).and_return("developer" => true)
+      PagSeguro.stub :config => {"developer" => true}
       PagSeguro.should be_developer
 
-      PagSeguro.stub!(:config).and_return("developer" => false)
+      PagSeguro.stub :config => {"developer" => false}
       PagSeguro.should_not be_developer
     end
   end

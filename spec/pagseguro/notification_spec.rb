@@ -8,7 +8,7 @@ describe PagSeguro::Notification do
   end
 
   it "should not request the confirmation url when running developer mode" do
-    PagSeguro.stub!(:developer?).and_return(true)
+    PagSeguro.stub :developer? => true
     Net::HTTP.should_not_receive(:new)
     @notification.should be_valid
   end
@@ -217,9 +217,9 @@ describe PagSeguro::Notification do
 
   describe "confirmation" do
     before do
-      PagSeguro.stub!(:developer?).and_return(false)
+      PagSeguro.stub :developer? => false
       @url = PagSeguro::Notification::API_URL
-      @notification.stub!(:api_url).and_return(@url)
+      @notification.stub :api_url => @url
     end
 
     it "should be valid" do
@@ -245,7 +245,7 @@ describe PagSeguro::Notification do
       notification = PagSeguro::Notification.new(@the_params, 'ABCDEF')
 
       post = mock("post").as_null_object
-      post.should_receive(:set_form_data).with({:Comando => "validar", :Token => "ABCDEF"})
+      post.should_receive(:form_data=).with({:Comando => "validar", :Token => "ABCDEF"})
 
       Net::HTTP.should_receive(:new).and_return(mock("http").as_null_object)
       Net::HTTP::Post.should_receive(:new).and_return(post)
@@ -254,10 +254,10 @@ describe PagSeguro::Notification do
     end
 
     it "should set the authenticity token from the configuration" do
-      PagSeguro.stub!(:config).and_return("authenticity_token" => "ABCDEF")
+      PagSeguro.stub :config => {"authenticity_token" => "ABCDEF"}
 
       post = mock("post").as_null_object
-      post.should_receive(:set_form_data).with({:Comando => "validar", :Token => "ABCDEF"})
+      post.should_receive(:form_data=).with({:Comando => "validar", :Token => "ABCDEF"})
 
       Net::HTTP.should_receive(:new).and_return(mock("http").as_null_object)
       Net::HTTP::Post.should_receive(:new).and_return(post)
@@ -268,10 +268,10 @@ describe PagSeguro::Notification do
     it "should propagate params" do
       param!("VendedorEmail", "john@doe.com")
       param!("NumItens", "14")
-      PagSeguro.stub!(:config).and_return("authenticity_token" => "ABCDEF")
+      PagSeguro.stub :config => {"authenticity_token" => "ABCDEF"}
 
       post = mock("post").as_null_object
-      post.should_receive(:set_form_data).with({
+      post.should_receive(:form_data=).with({
         :Comando => "validar",
         :Token => "ABCDEF",
         "VendedorEmail" => "john@doe.com",
