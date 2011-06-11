@@ -54,7 +54,7 @@ O arquivo de configuração gerado será parecido com isto:
 	  email: user@example.com
 	  return_to: "/pedido/efetuado"
 
-Este plugin possui um modo de desenvolvimento que permite simular a realização de pedidos e envio de notificações; basta utilizar a opção `developer`. Ela é ativada por padrão nos ambientes de desenvolvimento e teste. Você deve configurar as opções `base`, que deverá apontar para o seu servidor e a URL de retorno, que deverá ser configurada no próprio [PagSeguro](https://pagseguro.uol.com.br/?ind=689659), na página <https://pagseguro.uol.com.br/Security/ConfiguracoesWeb/RetornoAutomatico.aspx>.
+Esta gem possui um modo de desenvolvimento que permite simular a realização de pedidos e envio de notificações; basta utilizar a opção `developer`. Ela é ativada por padrão nos ambientes de desenvolvimento e teste. Você deve configurar as opções `base`, que deverá apontar para o seu servidor e a URL de retorno, que deverá ser configurada no próprio [PagSeguro](https://pagseguro.uol.com.br/?ind=689659), na página <https://pagseguro.uol.com.br/Security/ConfiguracoesWeb/RetornoAutomatico.aspx>.
 
 Para o ambiente de produção, que irá efetivamente enviar os dados para o [PagSeguro](https://pagseguro.uol.com.br/?ind=689659), você precisará adicionar o e-mail cadastrado como vendedor e o `authenticity_token`, que é o Token para Conferência de Segurança, que pode ser conseguido na página <https://pagseguro.uol.com.br/Security/ConfiguracoesWeb/RetornoAutomatico.aspx>.
 
@@ -169,9 +169,9 @@ Depois, você será redirecionado para a URL de retorno que você configurou no 
 
 	$ rake pagseguro:notify ID=<id do pedido>
 
-O ID do pedido deve ser o mesmo que foi informado quando você instanciou a class `PagSeguro::Order`. Por padrão, o status do pedido será `completed` e o tipo de pagamento `credit_card`. Você pode especificar esses parâmetros como o exemplo abaixo.
+O ID do pedido deve ser o mesmo que foi informado quando você instanciou a class `PagSeguro::Order`. Por padrão, o status do pedido será `completed` e o tipo de pagamento `credit_card`. Você pode especificar esses parâmetros como no exemplo abaixo.
 
-	$ rake pagamento:notify ID=1 PAYMENT_METHOD=invoice STATUS=canceled NOTE="Enviar por motoboy" NAME="José da Silva" EMAIL="jose@dasilva.com"
+	$ rake pagseguro:notify ID=1 PAYMENT_METHOD=invoice STATUS=canceled NOTE="Enviar por motoboy" NAME="José da Silva" EMAIL="jose@dasilva.com"
 
 #### PAYMENT_METHOD
 
@@ -194,6 +194,17 @@ O ID do pedido deve ser o mesmo que foi informado quando você instanciou a clas
 Esta biblioteca assume que você está usando UTF-8 como codificação de seu projeto. Neste caso, o único ponto onde os dados são convertidos para UTF-8 é quando uma notificação é enviada do UOL em ISO-8859-1.
 
 Se você usa sua aplicação como ISO-8859-1, esta biblioteca NÃO IRÁ FUNCIONAR. Nenhum patch dando suporte ao ISO-8859-1 será aplicado; você sempre pode manter o seu próprio fork, caso precise.
+
+## TROUBLESHOOTING
+
+**Quero utilizar o servidor em Python para testar o retorno automático, mas recebo OpenSSL::SSL::SSLError (SSL_connect returned=1 errno=0 state=SSLv3 read server certificate B)**
+
+Neste caso, você precisa forçar a validação do POST enviado. Basta acrescentar a linha:
+
+	pagseguro_notification do |notification|
+	  notification.valid?(:force => true)
+	  # resto do código...
+	end
 
 ## AUTOR:
 
