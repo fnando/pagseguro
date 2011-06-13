@@ -3,7 +3,7 @@ module PagSeguro
 
   # PagSeguro receives all invoices in this URL. If developer mode is enabled,
   # then the URL will be /pagseguro_developer/invoice
-  GATEWAY_URL = "https://pagseguro.uol.com.br/pagseguro-ws/checkout/NPI.jhtml"
+  GATEWAY_URL = "https://pagseguro.uol.com.br/checkout/checkout.jhtml"
 
   # Hold the config/pagseguro.yml contents
   @@config = nil
