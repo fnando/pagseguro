@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    pagseguro (0.1.11)
+    pagseguro (0.1.12)
 
 GEM
   remote: http://gems.simplesideias.com.br/
