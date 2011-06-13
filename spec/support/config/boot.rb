@@ -1,4 +1,4 @@
-ENV["BUNDLE_GEMFILE"] = File.dirname(__FILE__) + "/../../../../Gemfile"
+ENV["BUNDLE_GEMFILE"] = File.dirname(__FILE__) + "/../../../Gemfile"
 require "bundler"
 Bundler.setup
 require "rails/all"
