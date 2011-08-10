@@ -30,7 +30,7 @@ O primeiro passo é instalar a biblioteca. Para isso, basta executar o comando
 
 Adicione a biblioteca ao arquivo Gemfile:
 
-	gem "pagseguro", "~> 0.1.10"
+	gem "pagseguro", "~> 0.1.12"
 
 Lembre-se de utilizar a versão que você acabou de instalar.
 
