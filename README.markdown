@@ -30,7 +30,9 @@ O primeiro passo é instalar a biblioteca. Para isso, basta executar o comando
 
 Adicione a biblioteca ao arquivo Gemfile:
 
-	gem "pagseguro", "~> 0.1.10"
+~~~.ruby
+gem "pagseguro", "~> 0.1.10"
+~~~
 
 Lembre-se de utilizar a versão que você acabou de instalar.
 
@@ -40,19 +42,21 @@ Depois de instalar a biblioteca, você precisará executar gerar o arquivo de co
 
 O arquivo de configuração gerado será parecido com isto:
 
-	development: &development
-	  developer: true
-	  base: "http://localhost:3000"
-	  return_to: "/pedido/efetuado"
-	  email: user@example.com
+~~~.yml
+development: &development
+  developer: true
+  base: "http://localhost:3000"
+  return_to: "/pedido/efetuado"
+  email: user@example.com
 
-	test:
-	  <<: *development
+test:
+  <<: *development
 
-	production:
-	  authenticity_token: 9CA8D46AF0C6177CB4C23D76CAF5E4B0
-	  email: user@example.com
-	  return_to: "/pedido/efetuado"
+production:
+  authenticity_token: 9CA8D46AF0C6177CB4C23D76CAF5E4B0
+  email: user@example.com
+  return_to: "/pedido/efetuado"
+~~~
 
 Esta gem possui um modo de desenvolvimento que permite simular a realização de pedidos e envio de notificações; basta utilizar a opção `developer`. Ela é ativada por padrão nos ambientes de desenvolvimento e teste. Você deve configurar as opções `base`, que deverá apontar para o seu servidor e a URL de retorno, que deverá ser configurada no próprio [PagSeguro](https://pagseguro.uol.com.br/?ind=689659), na página <https://pagseguro.uol.com.br/Security/ConfiguracoesWeb/RetornoAutomatico.aspx>.
 
@@ -62,92 +66,105 @@ Para o ambiente de produção, que irá efetivamente enviar os dados para o [Pag
 
 Para montar o seu formulário, você deverá utilizar a classe `PagSeguro::Order`. Esta classe deverá ser instanciada recebendo um identificador único do pedido. Este identificador permitirá identificar o pedido quando o [PagSeguro](https://pagseguro.uol.com.br/?ind=689659) notificar seu site sobre uma alteração no status do pedido.
 
-	class CartController < ApplicationController
-	  def checkout
-	    # Busca o pedido associado ao usuário; esta lógica deve
-	    # ser implementada por você, da maneira que achar melhor
-		@invoice = current_user.invoices.last
+~~~.ruby
+class CartController < ApplicationController
+  def checkout
+    # Busca o pedido associado ao usuario; esta logica deve
+    # ser implementada por voce, da maneira que achar melhor
+    @invoice = current_user.invoices.last
 
-		# Instanciando o objeto para geração do formulário
-	    @order = PagSeguro::Order.new(@invoice.id)
+    # Instanciando o objeto para geracao do formulario
+    @order = PagSeguro::Order.new(@invoice.id)
 
-	    # adicionando os produtos do pedido ao objeto do formulário
-	    @invoice.products.each do |product|
-	      # Estes são os atributos necessários. Por padrão, peso (:weight) é definido para 0,
-		  # quantidade é definido como 1 e frete (:shipping) é definido como 0.
-	      @order.add :id => product.id, :price => product.price, :description => product.title
-	    end
-	  end
-	end
+    # adicionando os produtos do pedido ao objeto do formulario
+    @invoice.products.each do |product|
+      # Estes sao os atributos necessarios. Por padrao, peso (:weight) eh definido para 0,
+      # quantidade eh definido como 1 e frete (:shipping) eh definido como 0.
+      @order.add :id => product.id, :price => product.price, :description => product.title
+    end
+  end
+end
+~~~
 
 Se você precisar, pode definir o tipo de frete com o método `shipping_type`.
 
-	@order.shipping_type = "SD" # Sedex
-	@order.shipping_type = "EN" # PAC
-	@order.shipping_type = "FR" # Frete Próprio
+~~~.ruby
+@order.shipping_type = "SD" # Sedex
+@order.shipping_type = "EN" # PAC
+@order.shipping_type = "FR" # Frete Proprio
+~~~
 
 Se você precisar, pode definir os dados de cobrança com o método `billing`.
 
-	@order.billing = {
-	  :name                  => "John Doe",
-	  :email                 => "john@doe.com",
-	  :address_zipcode       => "01234-567",
-	  :address_street        => "Rua Orobó",
-	  :address_number        => 72,
-	  :address_complement    => "Casa do fundo",
-	  :address_neighbourhood => "Tenório",
-	  :address_city          => "Pantano Grande",
-	  :address_state         => "AC",
-	  :address_country       => "Brasil",
-	  :phone_area_code       => "22",
-	  :phone_number          => "1234-5678"
-	}
+~~~.ruby
+@order.billing = {
+  :name                  => "John Doe",
+  :email                 => "john@doe.com",
+  :address_zipcode       => "01234-567",
+  :address_street        => "Rua Orobo",
+  :address_number        => 72,
+  :address_complement    => "Casa do fundo",
+  :address_neighbourhood => "Tenorio",
+  :address_city          => "Pantano Grande",
+  :address_state         => "AC",
+  :address_country       => "Brasil",
+  :phone_area_code       => "22",
+  :phone_number          => "1234-5678"
+}
+~~~
 
 Depois que você definiu os produtos do pedido, você pode exibir o formulário.
 
-	<!-- app/views/cart/checkout.html.erb -->
-	<%= pagseguro_form @order, :submit => "Efetuar pagamento!" %>
+~~~.erb
+<!-- app/views/cart/checkout.html.erb -->
+<%= pagseguro_form @order, :submit => "Efetuar pagamento!" %>
+~~~
 
 Por padrão, o formulário é enviado para o email no arquivo de configuração. Você pode mudar o email com a opção `:email`.
 
-	<%= pagseguro_form @order, :submit => "Efetuar pagamento!", :email => @account.email %>
+~~~.erb
+<%= pagseguro_form @order, :submit => "Efetuar pagamento!", :email => @account.email %>
+~~~
 
 ### Recebendo notificações
 
 Toda vez que o status de pagamento for alterado, o [PagSeguro](https://pagseguro.uol.com.br/?ind=689659) irá notificar sua URL de retorno com diversos dados. Você pode interceptar estas notificações com o método `pagseguro_notification`. O bloco receberá um objeto da classe `PagSeguro::Notification` e só será executado se for uma notificação verificada junto ao [PagSeguro](https://pagseguro.uol.com.br/?ind=689659).
 
-	class CartController < ApplicationController
-	  skip_before_filter :verify_authenticity_token
+~~~.ruby
+class CartController < ApplicationController
+  skip_before_filter :verify_authenticity_token
 
-	  def confirm
-	    return unless request.post?
+  def confirm
+    return unless request.post?
 
-		pagseguro_notification do |notification|
-		  # Aqui você deve verificar se o pedido possui os mesmos produtos
-		  # que você cadastrou. O produto só deve ser liberado caso o status
-		  # do pedido seja "completed" ou "approved"
-		end
-
-		render :nothing => true
-	  end
+	pagseguro_notification do |notification|
+	  # Aqui voce deve verificar se o pedido possui os mesmos produtos
+	  # que voce cadastrou. O produto soh deve ser liberado caso o status
+	  # do pedido seja "completed" ou "approved"
 	end
 
+	render :nothing => true
+  end
+end
+~~~
 O método `pagseguro_notification` também pode receber como parâmetro o `authenticity_token` que será usado pra verificar a autenticação.
 
-	class CartController < ApplicationController
-	  skip_before_filter :verify_authenticity_token
+~~~.ruby
+class CartController < ApplicationController
+  skip_before_filter :verify_authenticity_token
 
-	  def confirm
-	    return unless request.post?
-		# Se você receber pagamentos de contas diferentes, pode passar o
-		# authenticity_token adequado como parâmetro para pagseguro_notification
-		account = Account.find(params[:seller_id])
-		pagseguro_notification(account.authenticity_token) do |notification|
-		end
-
-		render :nothing => true
-	  end
+  def confirm
+    return unless request.post?
+	# Se voce receber pagamentos de contas diferentes, pode passar o
+	# authenticity_token adequado como parametro para pagseguro_notification
+	account = Account.find(params[:seller_id])
+	pagseguro_notification(account.authenticity_token) do |notification|
 	end
+
+	render :nothing => true
+  end
+end
+~~~
 
 O objeto `notification` possui os seguintes métodos:
 
@@ -201,10 +218,12 @@ Se você usa sua aplicação como ISO-8859-1, esta biblioteca NÃO IRÁ FUNCIONA
 
 Neste caso, você precisa forçar a validação do POST enviado. Basta acrescentar a linha:
 
-	pagseguro_notification do |notification|
-	  notification.valid?(:force => true)
-	  # resto do código...
-	end
+~~~.ruby
+pagseguro_notification do |notification|
+  notification.valid?(:force => true)
+  # resto do codigo...
+end
+~~~
 
 ## AUTOR:
 
