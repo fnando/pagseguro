@@ -157,7 +157,7 @@ O objeto `notification` possui os seguintes métodos:
 * `PagSeguro::Notification#payment_method`: Tipo de pagamento
 * `PagSeguro::Notification#processed_at`: Data e hora da transação
 * `PagSeguro::Notification#buyer`: Dados do comprador
-* `PagSeguro::Notification#valid?(force=false)`: Verifica se a notificação é válido, confirmando-a junto ao PagSeguro. A resposta é jogada em cache e pode ser forçada com `PagSeguro::Notification#valid?(:force)`
+* `PagSeguro::Notification#valid?(force=false)`: Verifica se a notificação é válida, confirmando-a junto ao PagSeguro. A resposta é jogada em cache e pode ser forçada com `PagSeguro::Notification#valid?(:force)`
 
 **ATENÇÃO:** Não se esqueça de adicionar `skip_before_filter :verify_authenticity_token` ao controller que receberá a notificação; caso contrário, uma exceção será lançada.
 
