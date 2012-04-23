@@ -21,6 +21,6 @@
 			<%= hidden_field_tag PagSeguro::Order::BILLING_MAPPING[name.to_sym], value %>
 		<% end %>
 
-		<%= submit_tag value, options%>
+		<%= submit_tag options[:submit], options.fetch(:html_options, {})%>
 	</div>
 </form>
