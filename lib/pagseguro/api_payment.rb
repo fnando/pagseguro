@@ -19,19 +19,6 @@ module PagSeguro
       end
     end
 
-    private
-    def each_value(hash, &blk) # :nodoc:
-      hash.each do |key, value|
-        if value.kind_of?(Hash)
-          hash[key] = each_value(value, &blk)
-        else
-          hash[key] = blk.call value
-        end
-      end
-
-      hash
-    end
-
     # Send the ApiOrder information and get redirect url
     #
     def get_payment_code(api_order)
@@ -77,6 +64,19 @@ module PagSeguro
       response = http.start {|r| r.request request }
       debugger
       (response.body =~ /VERIFICADO/) != nil
+    end
+    
+    private
+    def each_value(hash, &blk) # :nodoc:
+      hash.each do |key, value|
+        if value.kind_of?(Hash)
+          hash[key] = each_value(value, &blk)
+        else
+          hash[key] = blk.call value
+        end
+      end
+
+      hash
     end
   end
 end
