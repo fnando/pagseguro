@@ -13,8 +13,11 @@ module PagSeguro
     # Errors hash if any
     attr_accessor :errors
     
+    # Errors hash if any
+    attr_accessor :errors
+
     # The redirect_url if successful
-    attr_accessor :redirect_url
+    attr_accessor :code
 
     # Normalize the specified hash converting all data to UTF-8.
     #
@@ -90,8 +93,8 @@ module PagSeguro
       @errors = @payment.try(:[], 'errors')      
       
       # saves the redirect_url
-      code = @payment.try(:[], 'checkout').try(:[], 'code')
-      @redirect_url = code ? "https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{code}" : nil
+      @code = @payment.try(:[], 'checkout').try(:[], 'code')
+      @redirect_url = @code ? "https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{@code}" : nil
     end
 
     private
