@@ -84,7 +84,7 @@ module PagSeguro
       @response = response
       
       # saves the payment in hash format
-      @payment = Hash.from_xml(payment_response(api_order).body)
+      @payment = Hash.from_xml(@response.body)
 
       # get errors if any
       @errors = @payment.try(:[], :errors)      
