@@ -7,12 +7,15 @@ module PagSeguro
     # the pure response from the HTTP request
     attr_accessor :response
     
-    # The pure response from the HTTP request to check for errors
+    # The complete response hash
     attr_accessor :payment
 
+    # Errors hash if any
+    attr_accessor :errors
+    
     # The redirect_url if successful
     attr_accessor :redirect_url
-    
+
     # Normalize the specified hash converting all data to UTF-8.
     #
     def normalize(hash)
@@ -31,10 +34,6 @@ module PagSeguro
 
     # Send the ApiOrder information and get redirect url
     def initialize(api_order)
-      reset!
-      self.id = order_id
-      self.billing = {}
-
       # include the params to validate our request
       request_params = {
         :encoding => "UTF-8",
@@ -87,6 +86,9 @@ module PagSeguro
       # saves the payment in hash format
       @payment = Hash.from_xml(payment_response(api_order).body)
 
+      # get errors if any
+      @errors = @payment.try(:[], :errors)      
+      
       # saves the redirect_url
       code = @payment.try(:[], :checkout).try(:[], :code)
       @redirect_url = code ? "https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{code}" : nil
