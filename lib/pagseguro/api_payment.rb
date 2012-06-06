@@ -39,9 +39,9 @@ module PagSeguro
         i += 1
         request_params.merge!({
           "itemQuantity#{i}".to_sym => product[:quantity],
-          "itemId{i}".to_sym => product[:id],
+          "itemId#{i}".to_sym => product[:id],
           "itemDescription#{i}".to_sym => product[:description],
-          "itemAmount{i}".to_sym => product[:price]          
+          "itemAmount#{i}".to_sym => product[:price]          
         })
         request_params.merge!({
           "itemWeight#{i}".to_sym => product[:weight].to_i
