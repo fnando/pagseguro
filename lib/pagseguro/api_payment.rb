@@ -1,10 +1,18 @@
 # encoding: utf-8
 module PagSeguro
-  module ApiPayment
-    extend self
+  class ApiPayment
 
     API_URL = "https://ws.pagseguro.uol.com.br/v2/checkout/"
 
+    # the pure response from the HTTP request
+    attr_accessor :response
+    
+    # The pure response from the HTTP request to check for errors
+    attr_accessor :payment
+
+    # The redirect_url if successful
+    attr_accessor :redirect_url
+    
     # Normalize the specified hash converting all data to UTF-8.
     #
     def normalize(hash)
@@ -22,8 +30,11 @@ module PagSeguro
     end
 
     # Send the ApiOrder information and get redirect url
-    #
-    def get_payment_response(api_order)
+    def initialize(api_order)
+      reset!
+      self.id = order_id
+      self.billing = {}
+
       # include the params to validate our request
       request_params = {
         :encoding => "UTF-8",
@@ -31,7 +42,6 @@ module PagSeguro
         :token => PagSeguro.config["authenticity_token"],
         :currency => "BRL"
       }
-      # <%= hidden_field_tag "tipo", "CP" %>
 
       api_order.products.each_with_index do |product, i|
         i += 1
@@ -71,10 +81,17 @@ module PagSeguro
       request.form_data = denormalize(request_params)
       response = http.start {|r| r.request request }
       
-      #return the request
-      response
+      # saves the response
+      @response = response
+      
+      # saves the payment in hash format
+      @payment = Hash.from_xml(payment_response(api_order).body)
+
+      # saves the redirect_url
+      code = @payment.try(:[], :checkout).try(:[], :code)
+      @redirect_url = code ? "https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{code}" : nil
     end
-    
+
     private
     def each_value(hash, &blk) # :nodoc:
       hash.each do |key, value|
