@@ -25,7 +25,6 @@ module PagSeguro
     #
     def get_payment_code(api_order)
       # include the params to validate our request
-      debugger
       request_params = {
         :encoding => "UTF-8",
         :email => PagSeguro.config["email"],
@@ -64,8 +63,7 @@ module PagSeguro
       request = Net::HTTP::Post.new(uri.path)
       request.form_data = denormalize(request_params)
       response = http.start {|r| r.request request }
-      debugger
-      (response.body =~ /VERIFICADO/) != nil
+      response
     end
     
     private
