@@ -23,14 +23,13 @@ module PagSeguro
 
     # Send the ApiOrder information and get redirect url
     #
-    def get_payment_code(api_order)
+    def get_payment_response(api_order)
       # include the params to validate our request
       request_params = {
         :encoding => "UTF-8",
         :email => PagSeguro.config["email"],
         :token => PagSeguro.config["authenticity_token"],
-        :currency => "BRL",
-        :reference => api_order.id
+        :currency => "BRL"
       }
       # <%= hidden_field_tag "tipo", "CP" %>
 
@@ -53,6 +52,14 @@ module PagSeguro
         })
       end
 
+      # add optional values if available
+      request_params.merge!({:reference => api_order.id}) if api_order.id
+      request_params.merge!({:shippingType => api_order.shipping_type}) if api_order.shipping_type
+      request_params.merge!({:extraAmount => api_order.extra_amount}) if api_order.extra_amount
+      request_params.merge!({:redirectURL => api_order.redirect_url}) if api_order.redirect_url
+      request_params.merge!({:maxUses => api_order.max_uses}) if api_order.max_uses
+      request_params.merge!({:maxAge => api_order.max_age}) if api_order.max_age
+      
       # do the request
       uri = URI.parse(API_URL)
       http = Net::HTTP.new(uri.host, uri.port)
@@ -63,6 +70,8 @@ module PagSeguro
       request = Net::HTTP::Post.new(uri.path)
       request.form_data = denormalize(request_params)
       response = http.start {|r| r.request request }
+      
+      #return the request
       response
     end
     
