@@ -1,8 +1,10 @@
 # encoding: utf-8
 module PagSeguro
   class ApiPayment
+    extend self
+
     API_URL = "https://ws.pagseguro.uol.com.br/v2/checkout/"
-    
+
     # Normalize the specified hash converting all data to UTF-8.
     #
     def normalize(hash)
@@ -35,19 +37,19 @@ module PagSeguro
 
       api_order.products.each_with_index do |product, i|
         i += 1
-        request_params.merge({
+        request_params.merge!({
           "itemQuantity#{i}".to_sym => product[:quantity],
           "itemId{i}".to_sym => product[:id],
           "itemDescription#{i}".to_sym => product[:description],
           "itemAmount{i}".to_sym => product[:price]          
         })
-        request_params.merge({
+        request_params.merge!({
           "itemWeight#{i}".to_sym => product[:weight].to_i
         }) if product[:weight]
       end
 
       api_order.billing.each do |name, value|
-        request_params.merge({
+        request_params.merge!({
           PagSeguro::ApiOrder::BILLING_MAPPING[name.to_sym].to_sym => value
         })
       end
