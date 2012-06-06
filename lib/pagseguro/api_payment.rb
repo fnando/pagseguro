@@ -87,10 +87,10 @@ module PagSeguro
       @payment = Hash.from_xml(@response.body)
 
       # get errors if any
-      @errors = @payment.try(:[], :errors)      
+      @errors = @payment.try(:[], 'errors')      
       
       # saves the redirect_url
-      code = @payment.try(:[], :checkout).try(:[], :code)
+      code = @payment.try(:[], 'checkout').try(:[], 'code')
       @redirect_url = code ? "https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{code}" : nil
     end
 
