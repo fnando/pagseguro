@@ -1,6 +1,6 @@
 # encoding: utf-8
 module PagSeguro
-  class ApiPayment
+  module ApiPayment
     extend self
 
     API_URL = "https://ws.pagseguro.uol.com.br/v2/checkout/"
