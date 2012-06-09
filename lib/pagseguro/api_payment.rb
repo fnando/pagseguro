@@ -13,11 +13,11 @@ module PagSeguro
     # Errors hash if any
     attr_accessor :errors
     
-    # Errors hash if any
-    attr_accessor :errors
+    # Payment code attributed by PagSeguro
+    attr_accessor :code
 
     # The redirect_url if successful
-    attr_accessor :code
+    attr_accessor :redirect_url
 
     # Normalize the specified hash converting all data to UTF-8.
     #
