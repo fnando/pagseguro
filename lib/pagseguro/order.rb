@@ -72,7 +72,7 @@ module PagSeguro
       options[:fees] = convert_unit(options[:fees], 100)
 
       # convert price to cents
-      options[:price] = "%03d" % convert_unit(options[:price], 100)
+      options[:price] = convert_unit(options[:price], 100)
 
       # convert weight to grammes
       options[:weight] = convert_unit(options[:weight], 1000)
@@ -87,7 +87,7 @@ module PagSeguro
     private
     def convert_unit(number, unit)
       number = (BigDecimal("#{number}") * unit).to_i unless number.nil? || number.kind_of?(Integer)
-      number
+      "%03d" % number
     end
   end
 end
