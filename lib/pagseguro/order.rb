@@ -16,7 +16,7 @@ module PagSeguro
       :email                 => "cliente_email"
     }
 
-    # The list of products added to the order
+    # Optional: extra amount on the purchase (negative for discount
     attr_accessor :extra_amount
     
     # The list of products added to the order
