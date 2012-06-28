@@ -13,7 +13,8 @@ module PagSeguro
       :address_country       => "cliente_pais",
       :phone_area_code       => "cliente_ddd",
       :phone_number          => "cliente_tel",
-      :email                 => "cliente_email"
+      :email                 => "cliente_email",
+      :extra_amount          => "extra_amount"
     }
 
     # The list of products added to the order
