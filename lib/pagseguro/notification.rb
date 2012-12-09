@@ -13,7 +13,8 @@ module PagSeguro
       :transaction_id => "TransacaoID",
       :shipping_type  => "TipoFrete",
       :shipping       => "ValorFrete",
-      :notes          => "Anotacao"
+      :notes          => "Anotacao",
+      :extras         => "Extras"
     }
 
     # Map order status from PagSeguro.
