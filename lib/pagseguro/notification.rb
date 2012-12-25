@@ -217,6 +217,7 @@ module PagSeguro
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
       http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+      http.ssl_version = :SSLv3
       http.ca_file = File.dirname(__FILE__) + "/cacert.pem"
 
       request = Net::HTTP::Post.new(uri.path)
