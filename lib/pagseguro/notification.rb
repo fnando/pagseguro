@@ -206,24 +206,45 @@ module PagSeguro
     def validates?
       return true if PagSeguro.developer?
 
-      # include the params to validate our request
-      request_params = params.merge({
-        :Comando => "validar",
-        :Token => @token || PagSeguro.config["authenticity_token"]
-      }).dup
+      begin
+        # include the params to validate our request
+        request_params = params.merge({
+          :Comando => "validar",
+          :Token => @token || PagSeguro.config["authenticity_token"]
+        }).dup
 
-      # do the request
-      uri = URI.parse(API_URL)
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true
-      http.verify_mode = OpenSSL::SSL::VERIFY_PEER
-      http.ssl_version = :SSLv3
-      http.ca_file = File.dirname(__FILE__) + "/cacert.pem"
+        # do the request
+        uri = URI.parse(API_URL)
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = true
+        http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+        http.ssl_version = :SSLv3
+        http.ca_file = File.dirname(__FILE__) + "/cacert.pem"
 
-      request = Net::HTTP::Post.new(uri.path)
-      request.form_data = denormalize(request_params)
-      response = http.start {|r| r.request request }
-      (response.body =~ /VERIFICADO/) != nil
+        request = Net::HTTP::Post.new(uri.path)
+        request.form_data = denormalize(request_params)
+        response = http.start {|r| r.request request }
+        (response.body =~ /VERIFICADO/) != nil
+      rescue
+        # include the params to validate our request
+        request_params = params.merge({
+          :Comando => "validar",
+          :Token => @token || PagSeguro.config["authenticity_token"]
+        }).dup
+
+        # do the request
+        uri = URI.parse(API_URL)
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = true
+        http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+        http.ssl_version = :SSLv3
+        http.ca_file = File.dirname(__FILE__) + "/cacert.pem"
+
+        request = Net::HTTP::Post.new(uri.path)
+        request.form_data = denormalize(request_params)
+        response = http.start {|r| r.request request }
+        (response.body =~ /VERIFICADO/) != nil
+      end
     end
   end
 end
