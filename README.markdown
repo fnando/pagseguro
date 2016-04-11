@@ -1,5 +1,7 @@
 # PAGSEGURO
 
+[![Este projeto não está mais sendo mantido. Use pagseguro/ruby, a gem oficial.](http://messages.hellobits.com/error.svg?message=Este%20projeto%20n%C3%A3o%20est%C3%A1%20mais%20sendo%20mantido.%20Use%20pagseguro%2Fruby%2C%20a%20gem%20oficial.)](https://github.com/pagseguro/ruby)
+
 Este é um plugin do Ruby on Rails que permite utilizar o [PagSeguro](https://pagseguro.uol.com.br/?ind=689659), gateway de pagamentos do [UOL](http://uol.com.br).
 
 ## SOBRE O PAGSEGURO
