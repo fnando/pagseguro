@@ -8,7 +8,7 @@ describe PagSeguro::Helper do
   end
 
   subject {
-    Nokogiri::HTML(helper.pagseguro_form(@order)).css("form").first
+    Nokogiri::HTML(helper.pagseguro_form(@order, :submit_options => { :class => 'foo' })).css("form").first
   }
 
   context "with default attributes" do
@@ -20,7 +20,7 @@ describe PagSeguro::Helper do
     it { should have_input(:name => "ref_transacao", :value => "I1001") }
     it { should_not have_input(:name => "tipo_frete") }
     it { should have_input(:name => "email_cobranca", :value => "john@doe.com") }
-    it { should have_input(:type => "submit", :value => "Pagar com PagSeguro") }
+    it { should have_input(:type => "submit", :value => "Pagar com PagSeguro", :class => 'foo') }
   end
 
   it "should include shipping type" do

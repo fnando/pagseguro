@@ -5,7 +5,7 @@
 		<%= hidden_field_tag "tipo", "CP" %>
 		<%= hidden_field_tag "moeda", "BRL" %>
 		<%= hidden_field_tag "ref_transacao", order.id %>
-		<%= hidden_field_tag "tipo_frete", order.shipping_type if order.shipping_type %>
+		<%= hidden_field_tag "frete", order.shipping_type if order.shipping_type %>
 
 		<% order.products.each_with_index do |product, i| %>
 			<% i += 1 %>
@@ -21,6 +21,6 @@
 			<%= hidden_field_tag PagSeguro::Order::BILLING_MAPPING[name.to_sym], value %>
 		<% end %>
 
-		<%= submit_tag options[:submit] %>
+    <%= submit_tag options[:submit], options.fetch(:submit_options, {}) %>
 	</div>
 </form>
